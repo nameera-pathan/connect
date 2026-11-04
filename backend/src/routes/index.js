@@ -15,7 +15,7 @@ Router.post('/register', trimRequest.all, register)
 Router.post('/login', trimRequest.all, login)
 Router.post('/logout', trimRequest.all, logout)
 Router.patch('/edit', trimRequest.all, userAuth, editInfo)
-Router.post('/refreshtoken', trimRequest.all, userAuth, refreshToken)
+Router.post('/refreshtoken', trimRequest.all, refreshToken)
 
 Router.get('/search', trimRequest.all, userAuth, search)
 
