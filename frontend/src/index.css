@@ -1,0 +1,229 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* @plugin "daisyui"; */
+
+.convos{
+    height: calc(100vh - 220px);
+    overflow-y: auto;
+}
+
+.scrollbar::-webkit-scrollbar{
+    width: 5px;
+}
+
+.scrollbar::-webkit-scrollbar-track{
+    background: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb{
+    background: #444e54;
+}
+
+.overflow-scrollbar{
+    height:calc(100vh - 155px);
+    overflow-y: auto ;
+    overflow-x: hidden;
+}
+
+  /* call background */
+  @layer components {
+  }
+
+  .btn_secondary {
+    @apply w-[45px] h-[45px] rounded-full flex items-center justify-center bg-dark_bg_2;
+  }
+  .callbg {
+    background-image: linear-gradient(black, black),
+      url(https://res.cloudinary.com/dmhcnhtng/image/upload/v1677358270/Untitled-1_copy_rpx8yb.jpg);
+    background-size: cover;
+    background-blend-mode: saturation;
+  }
+  .largeVideoCall {
+    @apply absolute top-0 bottom-0 left-0 right-0 z-20 object-cover h-full bg-red-400 cursor-pointer;
+  }
+  .SmallVideoCall {
+    @apply w-28 h-32 object-cover absolute bottom-4 right-2 z-30 bg-blue-500 cursor-pointer rounded-lg;
+  }
+  .moveVideoCall {
+    @apply bottom-32 transition-all duration-100;
+  }
+  .moveActionsComp {
+    @apply block;
+  }
+
+  /* search arrow rotate animation */
+.rotateAnimation{
+    animation: rotate 0.3s forwards;
+}
+
+@keyframes rotate {
+    0%{
+        transform: rotate(-90deg);
+    }
+}
+
+
+
+/*---Emoji picker ---------*/
+.epr-dark-theme {
+    background: #202c33 !important;
+    border: none !important;
+  }
+  .epr-dark-theme {
+    width: 100% !important;
+  }
+  
+  
+  .openEmojiAnimation {
+    animation: openAn 0.1s forwards;
+  }
+  @keyframes openAn {
+    0% {
+      transform: translateY(60px);
+    }
+  }
+  .epr-search-container input {
+    background: #222e35 !important;
+    border-radius: 0 !important;
+    border: none !important;
+    font-size: 13px;
+  }
+  .epr-preview {
+    display: none !important;
+  }
+  .epr-emoji-category-label {
+    background: transparent !important;
+    font-size: 15px;
+    font-weight: normal !important;
+  }
+
+  /* --- handle --- */
+  .epr-header {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+
+  /*--- Emoji Scroollbar ------*/
+    /* -----width------ */
+  .epr-body::-webkit-scrollbar {
+    width: 6px !important;
+  }
+  
+
+
+  /*  --------Track -------- */
+.epr-body::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+
+
+  /* ------- Handle --------- */
+  .epr-body::-webkit-scrollbar-thumb {
+    background: #444e54 !important;
+  }
+  .epr-category-nav {
+    padding: 10px 0 !important;
+  }
+  .epr-category-nav .epr-active::after {
+    content: "";
+    width: 140px;
+    height: 4px;
+    background: #00a884;
+    position: absolute;
+    bottom: -10px;
+    left: -55px;
+  }
+  .openToolsAnimation {
+    animation: openTools 0.2s forwards;
+  }
+  @keyframes openTools {
+    0% {
+      transform: translateY(100%);
+    }
+  }
+
+
+  /* ---------------- fileIcon hover ------------ */
+
+  .fileThumbnail:hover .removeFileIcon{
+    display: block;
+  }
+
+
+  /* ----------------  React select --------------- */
+
+  /* React select */
+.css-obio5r-control:hover {
+  border-color: transparent !important;
+}
+.css-obio5r-control {
+  box-shadow: none !important;
+}
+
+.css-1hb7zxy-IndicatorsContainer {
+  display: none !important;
+}
+.css-1p3m7a8-multiValue {
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid #025144;
+  border-radius: 5px !important;
+}
+.css-1p3m7a8-multiValue:hover{
+  background: transparent !important;
+} 
+
+/* name */
+.css-1p3m7a8-multiValue span {
+  color: #fff !important;
+  /* border: solid grey 3px !important; */
+}
+.css-1p3m7a8-multiValue span:hover {
+  background: transparent !important;
+}
+
+.css-v7duua {
+  background: transparent !important;
+}
+.css-v7duua :hover {
+  background: transparent !important;
+}
+
+.css-tj5bde-Svg {
+  background: rgb(0, 179, 255);
+  color: white;
+  border-radius: 50%;
+}
+.css-12a83d4-MultiValueRemove:hover {
+  background: transparent !important;
+}
+.css-12a83d4-MultiValueRemove:hover svg {
+  fill: #fff !important;
+}
+.css-qbdosj-Input input {
+  color: #fff !important;
+}
+.css-1nmdiq5-menu {
+  background: transparent !important;
+  color: #fff !important;
+  border: 1px solid #025144;
+  border-radius: 5px !important;
+}
+.css-1n6sfyn-MenuList {
+  background: transparent !important;
+}
+
+.createGroupAnimation {
+  animation: cga 0.5s;
+}
+@keyframes cga {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
