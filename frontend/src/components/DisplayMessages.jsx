@@ -35,6 +35,8 @@ export default function DisplayMessages({onlineUsers, isTyping, callUser, setCal
     const inputDocFilesRef = useRef()
     const inputAddFilesAfterRef = useRef(null)
 
+    const token = user.token
+
     const handleMessageChange = (e) =>{
         setMessage(e.target.value)
         if(e.target.value.length > 0){
@@ -51,7 +53,7 @@ export default function DisplayMessages({onlineUsers, isTyping, callUser, setCal
         setShowEmojiPicker(false)
         setLoading(true)
         // if(!message) return
-        let currentMessage = await dispatch(sendMessageThunk({textmessage:message, conversationId: activeConversation._id, files:[]}))
+        let currentMessage = await dispatch(sendMessageThunk({textmessage:message, conversationId: activeConversation._id, files:[], token:token}))
         await socket.emit('send message', currentMessage.payload.data)
         setLoading(false)
     }
@@ -67,7 +69,8 @@ export default function DisplayMessages({onlineUsers, isTyping, callUser, setCal
         const values = {
             textmessage: fileMsgInput,
             files: uploadedFiles.length > 0 ? uploadedFiles : [] ,
-            conversationId: activeConversation._id
+            conversationId: activeConversation._id,
+            token: token
         }
         await dispatch(clearFiles()) 
         let currentMessage = await dispatch(sendMessageThunk(values))  
@@ -276,7 +279,7 @@ export default function DisplayMessages({onlineUsers, isTyping, callUser, setCal
 
     useEffect(()=>{
         if(activeConversation._id){
-            dispatch(getConversationMessagesThunk({id:activeConversation._id}))
+            dispatch(getConversationMessagesThunk({id:activeConversation._id, token:token}))
             let isOnline = onlineUsers.find((u)=>u.userId === GetReceiver(user.id, activeConversation.members))
             if(isOnline){
                 setOnline('online')

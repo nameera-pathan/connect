@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { loginUserThunk } from "../controller/UserReducer"
 import { PulseLoader } from "react-spinners"
+// import validator from 'validator'
 
 const Login = () => {
     const navigate = useNavigate()
@@ -11,69 +12,94 @@ const Login = () => {
     const [data, setData] = useState({
         email: '',
         password:'',
-    }) 
-    const handleSubmit = () =>{
-        dispatch(loginUserThunk(data))
+        username:'',
+        text:''
+    })
+      const [passwordEye, setPasswordEye] = useState({
+        type: "password",
+        btnText: "show"
+    })
+
+
+    const handleSubmit = async () =>{
+        const values = {
+          text: data.text, password: data.password
+        }
+        dispatch(loginUserThunk(values))
         setData({
             email:'',
             password:'',
+            username:'',
+            text:''
         })
     }
+    
 
-    const handleSubmitFromKey = (e) =>{
+    const handleSubmitFromKey = async (e) =>{
       if(e.key === 'Enter'){
         dispatch(loginUserThunk(data))
         setData({
             email:'',
             password:'',
+            username:'',
+            text:''
         })
       }
   }
 
     const handleChange = (e) =>{setData({...data, [e.target.name]:e.target.value}) }
+    const handleChangeText = (e) =>{setData({...data, [e.target.name]:e.target.value, email:e.target.value, username:e.target.value }) }
+
+    const togglePassword = (e) =>{
+        if(passwordEye.btnText === "show"){
+            setPasswordEye({...passwordEye, btnText:"hide", type:"text"})
+        }
+        else{
+            setPasswordEye({...passwordEye, btnText:"show", type:"password"})
+        }
+    }
+
   
     return (
           <section className="flex items-center justify-center min-h-screen dark:bg-dark_bg_1 dark">
             <div className="card w-full max-w-sm shadow-lg bg-dark_bg_2 rounded-lg focus:none">
               <div className="card-body">
-                  <h2 className="text-xl font-bold text-slate-200 text-center tracking-wide">Login to PingMe</h2>
+                  <h2 className="text-xl font-bold text-slate-200 text-center tracking-wide mb-4">Login to PingMe</h2>
 
                   <div>
 
                     {/*  email */}
-                    <div className="mb-4">
-                    <label className="label">
-                        <span className="label-text">Email</span>
-                    </label>
+                    <div className="mb-4 ">
                     <input
                         autoComplete="off"
-                        onChange={(e)=>{handleChange(e)}}
-                        value={data.email}
-                        name='email'
-                        type="email"
-                        placeholder="Email"
+                        onChange={(e)=>{handleChangeText(e)}}
+                        value={data.text}
+                        name="text"
+                        type="text"
+                        placeholder="Email or Username"
                         className="input input-bordered w-full"
                         required
                     />
                     </div>
 
                     {/* password */}
-                    <div className="mb-4">
-                    <label className="label">
-                        <span className="label-text">Password</span>
-                    </label>
-                    <input
-                        autoComplete="off"
-                        onChange={(e)=>{handleChange(e)}}
-                        value={data.password}
-                        name='password'
-                        type="password"
-                        placeholder="Password"
-                        className="input input-bordered w-full"
-                        required
-                        onKeyDown={(e)=>{ handleSubmitFromKey(e) }}
-                    />
+                    <div className="mb-4 relative">
+                        <div className="flex justify-between">
+                        <input
+                            autoComplete="off"
+                            onChange={(e)=>{handleChange(e)}}
+                            value={data.password}
+                            name='password'
+                            type={passwordEye.type}
+                            placeholder="Password"
+                            id="password"
+                            className="input input-bordered w-[80%]"
+                            required
+                        />
+                        <button type="button" className="border-2 border-gray-700 rounded-lg button w-[15%]"
+                         onClick={togglePassword} id="pswEyeBtn">{passwordEye.btnText}</button>
                     </div>
+                </div>
 
 
                 <button className="btn btn-success tracking-wide text-white w-full transition ease-in duration-200" onClick={handleSubmit} >
@@ -95,6 +121,7 @@ const Login = () => {
 }
 
 export default Login
+
 
 
 

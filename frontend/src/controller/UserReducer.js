@@ -13,7 +13,6 @@ export const registerUserThunk = createAsyncThunk('auth/register', async (values
             const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/register`,values, { withCredentials: true })
             const data = {...response.data.data}
             return data
-            // return values
         } catch (err) {
             return rejectWithValue(err.response.data)
         }
@@ -23,6 +22,7 @@ export const loginUserThunk = createAsyncThunk('auth/login', async (values, {rej
     try {
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/login`,values, { withCredentials: true })
         const data = {...response.data.data}
+        // console.log('login reducer - ', data)
         return data
     } catch (err) {
         return rejectWithValue(err.response.data)
@@ -31,7 +31,8 @@ export const loginUserThunk = createAsyncThunk('auth/login', async (values, {rej
 
 export const updateUserInfoThunk = createAsyncThunk('info/edit', async (values, {rejectWithValue})=>{
     try {
-        const response = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/edit`, values, { withCredentials: true })
+        const token = values.token
+        const response = await axios.patch(`${process.env.REACT_APP_BACKEND_URL}/edit`, values, { headers: {Authorization: `Bearer ${token}`} })
         const data = {...response.data.data}
         return data
     } catch (err) {
@@ -41,7 +42,7 @@ export const updateUserInfoThunk = createAsyncThunk('info/edit', async (values, 
 
 export const logoutUserThunk = createAsyncThunk('auth/logout', async (values, {rejectWithValue})=>{
     try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, { withCredentials: true }) 
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, ) 
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)

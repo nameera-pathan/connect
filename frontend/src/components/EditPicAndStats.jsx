@@ -19,6 +19,8 @@ const EditPicAndStats = () => {
     const [currentStatus, setCurrentStatus] = useState(user.status)
     const inputRef = useRef()
 
+    const token = user.token
+
     const triggerFileInput = () =>{
         inputRef.current.click()
     }
@@ -68,7 +70,8 @@ const EditPicAndStats = () => {
         }
         await dispatch(updateUserInfoThunk({
                 picture:imageToUpload ? imageToUpload : '',
-                status: currentStatus
+                status: currentStatus,
+                token: token
             })
         )
         if (status === 'success') {

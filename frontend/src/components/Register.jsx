@@ -11,10 +11,15 @@ const Register = () => {
     const {status, error} = useSelector((state)=> state.user)
     const [data, setData] = useState({
         name:'',
+        username:'',
         email:'',
         password:'',
         error:''
     }) 
+    const [passwordEye, setPasswordEye] = useState({
+        type: "password",
+        btnText: "show"
+    })
 
     const handleSubmit = async () =>{
         dispatch(registerUserThunk(data))
@@ -22,6 +27,15 @@ const Register = () => {
         // navigate('/')
     }
     const handleChange = (e) =>{setData({...data, [e.target.name]:e.target.value}) }
+
+    const togglePassword = (e) =>{
+        if(passwordEye.btnText === "show"){
+            setPasswordEye({...passwordEye, btnText:"hide", type:"text"})
+        }
+        else{
+            setPasswordEye({...passwordEye, btnText:"show", type:"password"})
+        }
+    }
 
     useEffect(() => {
         if (status === 'success') {
@@ -71,21 +85,42 @@ const Register = () => {
                 />
                 </div>
 
-                {/* password */}
+                {/*  username */}
                 <div className="mb-4">
                 <label className="label">
-                    <span className="label-text">Password</span>
+                    <span className="label-text">Username</span>
                 </label>
                 <input
                     autoComplete="off"
                     onChange={(e)=>{handleChange(e)}}
-                    value={data.password}
-                    name='password'
-                    type="password"
-                    placeholder="Password"
+                    value={data.username}
+                    name='username'
+                    type="username"
+                    placeholder="Username"
                     className="input input-bordered w-full"
                     required
                 />
+                </div>
+
+                {/* password */}
+                <div className="mb-4 relative">
+                        <label className="label">
+                            <span className="label-text">Password</span>
+                        </label>
+                        <div className="flex justify-between">
+                        <input
+                            autoComplete="off"
+                            onChange={(e)=>{handleChange(e)}}
+                            value={data.password}
+                            name='password'
+                            type={passwordEye.type}
+                            placeholder="Password"
+                            id="password"
+                            className="input input-bordered w-[80%]"
+                            required
+                        />
+                        <button type="button" className="border-2 border-gray-700 rounded-lg button w-[15%]" onClick={togglePassword} id="pswEyeBtn">{passwordEye.btnText}</button>
+                    </div>
                 </div>
 
             <button className="btn btn-success tracking-wide text-white w-full transition ease-in duration-200" onClick={handleSubmit} >
@@ -107,9 +142,6 @@ const Register = () => {
 
 
 export default Register
-
-
-
 
 
 

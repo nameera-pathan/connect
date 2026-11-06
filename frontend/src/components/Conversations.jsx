@@ -12,9 +12,11 @@ export default function Conversations({onlineUsers, isTyping}) {
     const {user} = useSelector(state => state.user)
     const {conversations, activeConversation, status} = useSelector(state => state.chat)
 
+    const token = user.token
+
     const getConversation = async (members, convoId, isGroup) => {
         let receiverId = GetReceiver(user.id, members)
-        let conversation = await dispatch(getActiveConversationThunk({receiverId: receiverId, isGroup: isGroup ? convoId : false}))
+        let conversation = await dispatch(getActiveConversationThunk({receiverId: receiverId, isGroup: isGroup ? convoId: false, token: token}))
         socket.emit('join conversation', conversation.payload._id)
     }
 

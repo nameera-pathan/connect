@@ -2,11 +2,15 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { getActiveConversationThunk } from '../controller/ChatReducer'
 // import SocketContext from '../context'
+
 export default function SearchResults({searchResults, setSearchResults, inputRef, setShow}) {
     // const socket = useContext(SocketContext)
     const dispatch = useDispatch()
+    const { user } = useSelector((state) => state.user);
+    const token = user.token
     const getConversation = async (receiverId) => {
-        await dispatch(getActiveConversationThunk({receiverId: receiverId}))
+        
+        await dispatch(getActiveConversationThunk({receiverId: receiverId, token: token}))
         setSearchResults([])
         inputRef.current.value = ''
         setShow(false)

@@ -2,12 +2,17 @@ import { useState } from 'react'
 import { FilterIcon, ReturnIcon, SearchIcon } from '../assets'
 import { useRef } from 'react'
 import axios from 'axios'
+import { useSelector } from 'react-redux'
 
 export default function Search({searchLength, setSearchResults, inputRef, show, setShow}) {
+    const { user } = useSelector((state) => state.user);
+    const token = user.token
     const handleSearch = async (e) =>{
         if(e.target.value && e.key == 'Enter'){
             try {
-                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/search?u=${e.target.value}`, {withCredentials:true})
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/search?u=${e.target.value}`, {
+                    headers: {Authorization: `Bearer ${token}`}
+                })
                 setSearchResults(response.data.data)
             } catch (err) {
                 console.log(err.response.data)
@@ -17,6 +22,7 @@ export default function Search({searchLength, setSearchResults, inputRef, show, 
             setSearchResults([])
         }
     }
+    
     return (
         <section className='h-[49px] py-1.5'>
             <div className='px-[10px]'>

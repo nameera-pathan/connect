@@ -17,11 +17,15 @@ export default function CreateGroup({ setShowCreateGroup }) {
     const [searchResults, setSearchResults] = useState([])
     const [selectedUsers, setSelectedUsers] = useState([])
 
+    const token = user.token
+
     const handleSearch = async (e) =>{
         setSearchResults([])
         if(e.target.value && e.key == 'Enter'){
             try {
-                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/search?q=${e.target.value}`, {withCredentials:true})
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/search?q=${e.target.value}`,  {
+                    headers: {Authorization: `Bearer ${token}`}
+                })
                 if(response.data.data.length > 0){
                     let tempArr = []
                     response.data.data.forEach((usr)=>{
@@ -51,7 +55,7 @@ export default function CreateGroup({ setShowCreateGroup }) {
                 users.push(usr.value)
             })
             let values = {
-                name, users
+                name, users, token
             }
             let conversation = await dispatch(createGroupConversationThunk(values))
         }

@@ -13,16 +13,27 @@ const initialState = {
 
 export const getConversationThunk = createAsyncThunk('conversation/all', async (values, {rejectWithValues})=>{
     try {
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/conversations`,{withCredentials:true})
+        const token = values.token
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/conversations`,
+            {  
+                headers: {Authorization: `Bearer ${token}`},
+                  
+            })
         return response.data.conversations
     } catch (err) {
         console.log(err.response.data)
         return rejectWithValues(err.response.data)
     }
 })
+
 export const getActiveConversationThunk = createAsyncThunk('conversation/active', async (values, {rejectWithValues})=>{
     try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/conversation`, values, {withCredentials:true})
+        const token = values.token
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/conversation`, values,     
+            {  
+                headers: {Authorization: `Bearer ${token}`},
+                 
+            })
         return response.data.data
     } catch (err) {
         console.log(err.response.data)
@@ -32,7 +43,12 @@ export const getActiveConversationThunk = createAsyncThunk('conversation/active'
 
 export const getConversationMessagesThunk = createAsyncThunk('conversation/messages', async (values, {rejectWithValues})=>{
     try {
-        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/conversation/${values.id}`, {withCredentials:true})
+        const token = values.token;
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/conversation/${values.id}`,     
+            {  
+                headers: {Authorization: `Bearer ${token}`},
+        
+            })
         return response.data.data
     } catch (err) {
         console.log(err.response.data)
@@ -43,7 +59,12 @@ export const getConversationMessagesThunk = createAsyncThunk('conversation/messa
 export const sendMessageThunk = createAsyncThunk('message/send', async (values, {rejectWithValues})=>{
     try {
         // console.log('send msg values: ', values)
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/send/message`, values, {withCredentials:true})
+        const token = values.token;
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/send/message`, values,     
+            {  
+                headers: {Authorization: `Bearer ${token}`},
+                  
+            })
         return response.data
     } catch (err) {
         console.log(err.response.data)
@@ -53,7 +74,12 @@ export const sendMessageThunk = createAsyncThunk('message/send', async (values, 
 
 export const createGroupConversationThunk = createAsyncThunk('conversation/create_group', async (values, {rejectWithValues})=>{
     try {
-        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/group`, values, {withCredentials:true})
+        const token = values.token;
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/group`, values,      
+            {  
+                headers: {Authorization: `Bearer ${token}`},
+                  
+            })
         return response.data.conversations
     } catch (err) {
         console.log(err.response.data)
