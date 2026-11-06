@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
     username:{
         type:String,
         unique:[true, 'username already exist!'],
+        lowercase:true
     },
     phonenumber:{
         type:String
@@ -38,21 +39,24 @@ const UserSchema = new mongoose.Schema({
     friends:{
         type:Number,
         default:0
+    },
+    followers:{
+        type:Number,
+        default:0
+    },
+    following:{
+        type:Number,
+        default:0
+    },
+    tags:[String],
+    bio:{
+        type:String,
+        default:""
     }
 },{
     collection:'users',
     timestamps:true
 })
-
-// Generate random string
-// function generateHash(){
-//     let str = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm'
-//     let hash = ''
-//     for(let i=0; i<8; i++){
-//         hash += str.charAt(Math.floor(Math.random() * str.length))
-//     }
-//     return hash
-// }
 
 UserSchema.pre('save', async function(next){
     try {
@@ -60,6 +64,14 @@ UserSchema.pre('save', async function(next){
             const salt = await bcrypt.genSalt(12)
             const hashedPassword = await bcrypt.hash(this.password, salt)
             this.password = hashedPassword
+            if(!this.username){
+                let email = this.email.toString().split("@")[0]
+                this.username = email
+                next()
+            }
+            else{
+                next()
+            }
         }
         next()
     } catch (error) {
@@ -67,13 +79,18 @@ UserSchema.pre('save', async function(next){
     }
 })
 
-UserSchema.index({username:'text'})
+UserSchema.index({username:'text', name:'text', email:'text'}, {
+    weights:{
+        username:10,
+        email:7,
+        name:9
+    }
+})
+
 
 const User = new mongoose.model('User', UserSchema)
 User.syncIndexes()
     .then(() => console.log('Indexes synchronized'))
     .catch(err => console.error('Index synchronization error:', err));
 module.exports = User;
-
-
 

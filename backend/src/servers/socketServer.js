@@ -45,18 +45,17 @@ const SocketServer = (socket, io) =>{
         socket.in(conversationId).emit('not typing')
     })
 
-
-
     // send and receive messages
     // send message to user that is not me 
     // everybody will get my message realtime
     // either its one to one convo or group convo
 
     socket.on('send message', (message)=>{
-        console.log(message);
+        console.log("message ------>", message);
         let conversation = message.conversation
         if(!conversation.members) return;
         conversation.members.map((member)=>{
+            console.log("member ------>", member)
             if(member === message.sender._id) {
                 return;
             }
@@ -66,7 +65,6 @@ const SocketServer = (socket, io) =>{
         }) 
         console.log(conversation.members)
     })
-
 }
 
 module.exports = SocketServer

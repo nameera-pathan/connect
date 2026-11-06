@@ -5,9 +5,9 @@ const sendMessage = async (req, res) =>{
     try {
         const user = req.user
         const {textmessage, conversationId} = req.body
-        // console.log('Message here --->', req.body)
+        // console.log('Message here req.user --->', req.body.user)
         const message = new Message({
-            sender:user._id,
+            sender:user.id,
             conversation:conversationId,
             message: textmessage,
             mediaFiles: req.body.files ? req.body.files : [] ,

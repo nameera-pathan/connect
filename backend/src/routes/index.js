@@ -14,9 +14,11 @@ const Router = express.Router()
 Router.post('/register', trimRequest.all, register)
 Router.post('/login', trimRequest.all, login)
 Router.post('/logout', trimRequest.all, logout)
-Router.patch('/edit', trimRequest.all, userAuth, editInfo)
 Router.post('/refreshtoken', trimRequest.all, refreshToken)
+Router.get('/middleware', trimRequest.all, userAuth )
 
+
+Router.patch('/edit', trimRequest.all, userAuth, editInfo)
 Router.get('/search', trimRequest.all, userAuth, search)
 
 Router.post('/conversation', trimRequest.all, userAuth, openAndCreateCoversation)

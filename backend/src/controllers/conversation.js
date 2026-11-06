@@ -4,7 +4,7 @@ const Message = require('../models/message')
 
 const openAndCreateCoversation = async (req, res) =>{
     try {
-        const senderId = req.user._id
+        const senderId = req.user.id
         const receiverId = req.body.receiverId
         if(!receiverId) throw new Error('Id required!')
             // check if chat or coversation already exist
@@ -53,9 +53,10 @@ const openAndCreateCoversation = async (req, res) =>{
 
 const getConversations = async (req, res) =>{
     try {
+        // console.log('USER HERE ------> ',req.user)
         const user = req.user
         const conversations = await Conversation.find({
-            members:{$elemMatch:{$eq:user._id}},
+            members:{$elemMatch:{$eq:user.id}},
         })
         .populate('members', '_id name email picture')
         .populate('latestMessage', '_id message createdAt seen')

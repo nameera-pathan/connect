@@ -13,8 +13,8 @@ const register = async (req, res) => {
         const user = new User({ 
             name, email, 
             phonenumber: req.body.phonenumber ? req.body.phonenumber : '' ,
-            password: password,
-            username: req.body.username ? req.body.username : req.body.email.toString().split("@")[0] 
+            password,
+            username: username? username.toLowerCase() : ''
         })
         let isNew = user.isNew
         const data = await user.save()
@@ -28,8 +28,6 @@ const register = async (req, res) => {
             maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
         })
 
-        // const token = await jwt.sign({id:data._id}, process.env.SECRET_KEY, {expiresIn:'30m'})
-        // res.cookie('token', token, { maxAge:3600000,  path: '/', sameSite: 'lax' })
         res.send({
             message: 'Registration successful',
             data :{
@@ -38,16 +36,15 @@ const register = async (req, res) => {
                 email: data.email,
                 picture: data.picture,
                 status: data.status,
-                // token: token,
                 token: access_token,
                 phonenumber: data.phonenumber,
-                // password:data.password,
-                username:data.username,
-                friends:data.friends,
-                // followers: data.followers,
-                // following: data.following,
-                // socials: data.socials,
-                // bio: data.bio,
+                password: data.password,
+                username: data.username,
+                friends: data.friends,
+                followers: data.followers,
+                following: data.following,
+                tag: data.tag,
+                bio: data.bio,
                 isNew: isNew
             }
         })
@@ -66,10 +63,15 @@ const register = async (req, res) => {
 const login = async (req, res) => {
     try {
         validateLogin(req.body)
-        const {email, password} = req.body
-        const user = await User.findOne({email})
+        const {email, password, username, text} = req.body
+        let user
+        // console.log("includes --------->", text.includes("@"))
+        if(email){ user = await User.findOne({email}) }
+        if(username){ user = await User.findOne({username})  }
         if(!user) throw new Error('User not found!')
-        const isPasswordValid = await bcrypt.compare(password, user.password)
+        console.log('user ----------------->',user)    
+        const isPasswordValid = await bcrypt.compare(password, user.password.toString())
+        console.log("valid ----> ", isPasswordValid)
         if(!isPasswordValid) throw new Error('Invalid credentials!')
 
         // access_token
@@ -81,8 +83,6 @@ const login = async (req, res) => {
             maxAge: 30 * 24 * 60 * 60 * 1000  // 30 days
         })
 
-        // const token = await jwt.sign({id:user._id}, process.env.SECRET_KEY, {expiresIn:'1h'})
-        // res.cookie('token', token, { maxAge:3600000,  path: '/', sameSite: 'lax' } )    
         res.send({
             message: 'Login successful',
             data: {
@@ -95,11 +95,11 @@ const login = async (req, res) => {
                 phonenumber: user.phonenumber,
                 username:user.username,
                 friends:user.friends,
-                // password:user.password,
-                // followers: user.followers,
-                // following: user.following,
-                // socials: user.socials,
-                // bio: user.bio,
+                password:user.password,
+                followers: user.followers,
+                following: user.following,
+                tags: user.tags,
+                bio: user.bio,
             }
         })
     } catch (error) {
@@ -135,28 +135,12 @@ const editInfo = async (req, res) => {
 const search = async (req, res) =>{
     try {
         const keyword = req.query.q
-        const hashname = req.query.u
-        const hash = req.query.h
-        let username
+        const username = req.query.u
         let message
-        if(!keyword && (!hashname || !hash) && !hashname) throw new Error('provide a search query first')
-        if(hashname && hash) username = hashname+'#'+hash    
+        if(!keyword && !username) throw new Error('provide a search query first')
         let users    
-        if(keyword){
-            message = 'keyword'
-            console.log('keyword')
-            users = await User.find({
-                $or:[
-                    {name:{$regex:keyword, $options:'i'}},
-                    {email:{$regex:keyword, $options:'i'}},
-                ]
-            })
-            .sort({updatedAt:-1}).select('-password')
-            .find({
-                _id:{ $ne:req.user._id }
-            })  
-        }   
-        else if(username){
+
+        if(username){
             message = 'username'
             users = await User.find({
                 $text:{
@@ -168,16 +152,20 @@ const search = async (req, res) =>{
                 _id:{ $ne:req.user._id }
             })  
         } 
-        else {
-            message = 'hashname'
-            users = await User.find(
-                {hashname:{$regex:hashname, $options:'i'}}
-            )
+        else if(keyword){
+            message = 'keyword'
+            console.log('keyword')
+            users = await User.find({
+                $or:[
+                    {name:{$regex:keyword, $options:'i'}},
+                    {username:{$regex:keyword, $options:'i'}},
+                ]
+            })
             .sort({updatedAt:-1}).select('-password')
             .find({
                 _id:{ $ne:req.user._id }
             })  
-        }
+        }   
         res.send({
             message,
             data:users
@@ -192,7 +180,6 @@ const search = async (req, res) =>{
 const logout = async (req, res) =>{
     try{
         res.clearCookie("refreshtoken", { path: "api/v1/refreshtoken"})
-        // res.cookie("token", null, {maxAge: new Date(Date.now()), path: '/', sameSite: 'lax'})
         res.send(`logged out!`)
     } catch(err){
         res.status(400).send(err.message)
@@ -203,10 +190,26 @@ const refreshToken = async (req, res) => {
     try {
         const refresh_token = req.cookies.refreshtoken
         if(!refresh_token) res.send("please login!!!")
-        const check = await jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET)
+        const decoded_obj = await jwt.verify(refresh_token, process.env.REFRESH_TOKEN_SECRET)
+        const user = await User.findById({_id: decoded_obj.id})
+        if(!user) throw new Error('User not found!')
+        const access_token = await jwt.sign({id:user._id}, process.env.ACCESS_TOKEN_SECRET, {expiresIn:'1d'})
         res.send({
-            check
-        })
+            message: 'Login successful',
+            data: {
+                id:user._id,
+                name: user.name,
+                email: user.email,
+                picture: user.picture,
+                status: user.status,
+                token: access_token,
+                phonenumber: user.phonenumber,
+                username:user.username,
+                friends:user.friends,
+            }
+        })                  
+         
+
     } catch (error) {
         res.status(400).send('badrequest') 
     }

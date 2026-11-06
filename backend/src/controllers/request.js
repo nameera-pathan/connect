@@ -4,7 +4,7 @@ const Notification = require('../models/notification')
 
 const sendRequest = async (req, res) =>{
     try {
-        const from = req.user._id
+        const from = req.user.id
         const to = req.params.id
         const status = "pending"
         if(from.toString() === to.toString()) throw new Error('cannot send request to yourself!')
@@ -48,7 +48,7 @@ const sendRequest = async (req, res) =>{
 
 const viewAllRequests = async (req, res) =>{
     try {
-        const to = req.user._id
+        const to = req.user.id
         const status = "pending"
         const requests = await Request.find({
             to,
@@ -76,7 +76,7 @@ const acceptAndRejectRequests = async (req, res) => {
         const requestIdExist = await Request.findById(id)    
         if(!requestIdExist) throw new Error('Friend request ID not found!')
 
-        const request = await Request.findOne({ _id:id, to:user._id , status:'pending' }) 
+        const request = await Request.findOne({ _id:id, to:user.id , status:'pending' }) 
         if(!request) throw new Error('Friend request not found!')  
 
         if(status === 'accept') {
@@ -126,8 +126,8 @@ const viewAllFriends = async (req, res) =>{
         const user = req.user
         const AllFriends = await Request.find({
             $or: [
-                { to: user._id, status: 'connected' },
-                { from: user._id, status: 'connected' }
+                { to: user.id, status: 'connected' },
+                { from: user.id, status: 'connected' }
             ]
         })
         .populate('from', 'name hash username _id picture')
@@ -135,7 +135,7 @@ const viewAllFriends = async (req, res) =>{
         .sort({'createdAt': 1})
 
         const friends = AllFriends.map((request)=>{
-            if(request.from._id.toString() === user._id.toString()){
+            if(request.from._id.toString() === user.id.toString()){
                 return {
                     name:request.to.name,
                     hash:request.to.hash,
