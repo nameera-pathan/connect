@@ -33,9 +33,15 @@ export const getConversationThunk = createAsyncThunk('conversation/all', async (
     }
 })
 
-export const getActiveConversationThunk = createAsyncThunk('conversation/active', async (values, {rejectWithValues})=>{
+export const getActiveConversationThunk = createAsyncThunk('conversation/active', async (values, {getState, rejectWithValues})=>{
     try {
-        const token = values.token
+        // const token = values.token
+         // Access the entire Redux state
+        const state = getState();
+
+        // Get token from userReducer
+        const token = await state.user.user.token;
+        // API Call with token
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/conversation`, values,     
             {  
                 headers: {Authorization: `Bearer ${token}`},
@@ -132,6 +138,9 @@ export const chatSlice = createSlice({
             let files = [...state.files];
             let fileToRemove = [files[index]];
             state.files = files.filter((file) => !fileToRemove.includes(file));
+        },
+        resetChat:(state, action)=>{
+            state.activeConversation = {}
         }
     },
     extraReducers:(builder)=>{
@@ -195,7 +204,8 @@ export const {
     updateMessagesAction,
     addFiles,
     clearFiles,
-    removeFileFromFiles
+    removeFileFromFiles,
+    resetChat
  } = chatSlice.actions;
 
 export default chatSlice.reducer

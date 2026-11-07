@@ -1,8 +1,9 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { loginUserThunk } from "../controller/UserReducer"
 import { PulseLoader } from "react-spinners"
+import { resetChat } from '../controller/ChatReducer'
 // import validator from 'validator'
 
 const Login = () => {
@@ -19,7 +20,6 @@ const Login = () => {
         type: "password",
         btnText: "show"
     })
-
 
     const handleSubmit = async () =>{
         const values = {
@@ -59,7 +59,12 @@ const Login = () => {
         }
     }
 
-  
+  // clearing old user's active conversation when new user logs in
+    useEffect(()=>{
+      dispatch(resetChat())
+    },[])
+
+
     return (
           <section className="flex items-center justify-center min-h-screen dark:bg-dark_bg_1 dark">
             <div className="card w-full max-w-sm shadow-lg bg-dark_bg_2 rounded-lg focus:none">

@@ -38,6 +38,7 @@ const Home = () => {
     const connectionRef = useRef()
 
     useEffect(()=>{
+
     },[activeConversation])
 
     useEffect(()=>{
@@ -47,6 +48,7 @@ const Home = () => {
         socket.on('online-users', (onlineUsers)=>{
           setUsersOnline([...onlineUsers])
         })
+        // clear active conversation of old user
       }  
     },[user])
 
@@ -163,12 +165,14 @@ const Home = () => {
       connectionRef?.current?.destroy();
     }
 
+    console.log(activeConversation)
     return (
         <section className="h-screen flex justify-center items-center bg-dark_bg_1 border overflow-hidden border py-4">
           <div className="container flex border w-full h-full">
 
             <SideBar onlineUsers={usersOnline} isTyping={isTyping} />
             {activeConversation._id 
+            //  && activeConversation.members[1]._id === user.id
             ? <DisplayMessages onlineUsers={usersOnline} isTyping={isTyping} 
             callUser={callUser} setCall={setCall} call={call}/> 
             : <DisplayNone/> }
