@@ -25,7 +25,7 @@ export const getConversationThunk = createAsyncThunk('conversation/all', async (
             {  
                 headers: {Authorization: `Bearer ${token}`},
             })
-        console.log("con thunk ----> ", response.data)    
+        // console.log("con thunk ----> ", response.data)    
         return response.data.conversations
     } catch (err) {
         console.log(err.response.data)
