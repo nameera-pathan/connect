@@ -11,14 +11,21 @@ const initialState = {
     files:[]
 }
 
-export const getConversationThunk = createAsyncThunk('conversation/all', async (values, {rejectWithValues})=>{
+export const getConversationThunk = createAsyncThunk('conversation/all', async (values, {getState, rejectWithValues})=>{
     try {
-        const token = values.token
+        // const token = values.token
+           
+        // Access the entire Redux state
+        const state = getState();
+
+        // Get token from userReducer
+        const token = await state.user.user.token;
+        // API Call with token
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/conversations`,
             {  
                 headers: {Authorization: `Bearer ${token}`},
-                  
             })
+        console.log("con thunk ----> ", response.data)    
         return response.data.conversations
     } catch (err) {
         console.log(err.response.data)

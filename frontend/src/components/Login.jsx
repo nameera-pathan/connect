@@ -23,7 +23,7 @@ const Login = () => {
 
     const handleSubmit = async () =>{
         const values = {
-          text: data.text, password: data.password
+          email: data.email, password: data.password
         }
         dispatch(loginUserThunk(values))
         setData({
@@ -73,9 +73,9 @@ const Login = () => {
                     <input
                         autoComplete="off"
                         onChange={(e)=>{handleChangeText(e)}}
-                        value={data.text}
-                        name="text"
-                        type="text"
+                        value={data.email}
+                        name="email"
+                        type="email"
                         placeholder="Email or Username"
                         className="input input-bordered w-full"
                         required

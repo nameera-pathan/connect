@@ -468,7 +468,7 @@ export default function DisplayMessages({onlineUsers, isTyping, callUser, setCal
                         <div className="mb-[60px] bg-zinc-950">
                             <div className="scrollbar overflow-scrollbar py-2 px-[5%]">
                                 { messages.map((msg)=>{
-                                    // console.log(msg)
+                                    // console.log("msg ----> ",msg)
                                     return(
                                        <div key={msg._id}> 
                                        {/* message files */}

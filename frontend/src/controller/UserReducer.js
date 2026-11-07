@@ -40,8 +40,15 @@ export const updateUserInfoThunk = createAsyncThunk('info/edit', async (values, 
     }
 })
 
-export const logoutUserThunk = createAsyncThunk('auth/logout', async (values, {rejectWithValue})=>{
+export const logoutUserThunk = createAsyncThunk('auth/logout', async ( {getState, rejectWithValue})=>{
     try {
+
+         // Access the entire Redux state
+        // const state = getState();
+
+        // // Get token from userReducer
+        // const chat = await state.chat.chat;
+
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, ) 
         return response.data
     } catch (err) {

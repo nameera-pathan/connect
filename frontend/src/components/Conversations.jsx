@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { GetReceiver, MomentDate } from '../hooks'
-import { getActiveConversationThunk } from '../controller/ChatReducer'
+import { getActiveConversationThunk, getConversationThunk } from '../controller/ChatReducer'
 import SocketContext from '../context'
 import { PulseLoader } from 'react-spinners'
 import { logoutAction } from '../controller/UserReducer'
@@ -9,6 +9,7 @@ import { logoutAction } from '../controller/UserReducer'
 export default function Conversations({onlineUsers, isTyping}) {
     const socket = useContext(SocketContext)
     const dispatch = useDispatch()
+    const [convos, setConvos] = useState([])
     const {user} = useSelector(state => state.user)
     const {conversations, activeConversation, status} = useSelector(state => state.chat)
 
