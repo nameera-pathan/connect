@@ -165,7 +165,7 @@ const Home = () => {
       connectionRef?.current?.destroy();
     }
 
-    console.log(activeConversation)
+    // console.log(activeConversation)
     return (
         <section className="h-screen flex justify-center items-center bg-dark_bg_1 border overflow-hidden border py-4">
           <div className="container flex border w-full h-full">
