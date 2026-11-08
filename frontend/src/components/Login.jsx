@@ -37,7 +37,10 @@ const Login = () => {
 
     const handleSubmitFromKey = async (e) =>{
       if(e.key === 'Enter'){
-        dispatch(loginUserThunk(data))
+        const values = {
+            email: data.email, password: data.password
+        }
+        dispatch(loginUserThunk(values))
         setData({
             email:'',
             password:'',
@@ -84,6 +87,7 @@ const Login = () => {
                         placeholder="Email or Username"
                         className="input input-bordered w-full"
                         required
+                        onKeyDown={handleSubmitFromKey}
                     />
                     </div>
 
@@ -100,6 +104,7 @@ const Login = () => {
                             id="password"
                             className="input input-bordered w-[80%]"
                             required
+                            onKeyDown={handleSubmitFromKey}
                         />
                         <button type="button" className="border-2 border-gray-700 rounded-lg button w-[15%]"
                          onClick={togglePassword} id="pswEyeBtn">{passwordEye.btnText}</button>

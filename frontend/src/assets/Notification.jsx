@@ -8,7 +8,7 @@ export default function NotificationIcon({ className }) {
       version="1.1"
       x="0px"
       y="0px"
-      enableBackground="new 0 0 48 48"
+      // enableBackground="new 0 0 48 48"
       xmlSpace="preserve"
     >
       <path

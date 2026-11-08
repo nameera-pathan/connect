@@ -47,6 +47,7 @@ export const getActiveConversationThunk = createAsyncThunk('conversation/active'
                 headers: {Authorization: `Bearer ${token}`},
                  
             })
+        // console.log(response.data.data)    
         return response.data.data
     } catch (err) {
         console.log(err.response.data)
@@ -85,14 +86,21 @@ export const sendMessageThunk = createAsyncThunk('message/send', async (values, 
     }
 })
 
-export const createGroupConversationThunk = createAsyncThunk('conversation/create_group', async (values, {rejectWithValues})=>{
+export const createGroupConversationThunk = createAsyncThunk('conversation/create_group', async (values, {getState, rejectWithValues})=>{
     try {
-        const token = values.token;
+        // const token = values.token;
+        // Access the entire Redux state
+        const state = getState();
+
+        // Get token from userReducer
+        const token = await state.user.user.token;
+        // API Call with token
+        // console.log("group thunk --> ", values)
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/group`, values,      
             {  
                 headers: {Authorization: `Bearer ${token}`},
-                  
             })
+        // console.log(response.data.data)    
         return response.data.conversations
     } catch (err) {
         console.log(err.response.data)
@@ -128,7 +136,7 @@ export const chatSlice = createSlice({
         },
         addFiles:(state, action)=>{
             state.files = [...state.files, action.payload]
-            console.log('addFiles: ' ,state.files)
+            // console.log('addFiles: ' ,state.files)
         },
         clearFiles:(state, action)=>{
             state.files = []
@@ -195,7 +203,17 @@ export const chatSlice = createSlice({
         .addCase(sendMessageThunk.rejected, (state)=>{
             state.status = 'failed'
         })
-        
+        // .addCase(createGroupConversationThunk.pending, (state)=>{
+        //     state.status = 'loading'
+        // })
+        // .addCase(createGroupConversationThunk.fulfilled, (state, action)=>{
+        //     state.status = 'success'
+        //     state.error = ''
+        //     state.messages= action.payload
+        // })
+        // .addCase(createGroupConversationThunk.rejected, (state)=>{
+        //     state.status = 'failed'
+        // })
     }    
 })
 
@@ -209,6 +227,14 @@ export const {
  } = chatSlice.actions;
 
 export default chatSlice.reducer
+
+
+
+
+
+
+
+
 
 
 

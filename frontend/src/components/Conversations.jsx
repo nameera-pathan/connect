@@ -17,7 +17,7 @@ export default function Conversations({onlineUsers, isTyping}) {
 
     const getConversation = async (members, convoId, isGroup) => {
         let receiverId = GetReceiver(user.id, members)
-        let conversation = await dispatch(getActiveConversationThunk({receiverId: receiverId, isGroup: isGroup ? convoId: false, token: token}))
+        let conversation = await dispatch(getActiveConversationThunk({receiverId: receiverId, convoId: convoId ? convoId : false, token: token}))
         socket.emit('join conversation', conversation.payload._id)
     }
 
@@ -42,7 +42,7 @@ export default function Conversations({onlineUsers, isTyping}) {
                                 {/* left */}
                                 <div className="flex items-center gap-x-3">
                                     <div className={`relative z-0 overflow-hidden h-[50px] min-w-[50px] max-w-[50px]
-                                       ${ checkOnline 
+                                       ${ !conversation.isGroup && checkOnline 
                                        ? 'before:absolute before:z-50 before:bg-green-500 before:h-[12px] before:w-[12px] before:rounded-full before:right-0.5 before:bottom-0.5' 
                                        : '' } `}>
                                         <img src={conversation.picture} alt="" 

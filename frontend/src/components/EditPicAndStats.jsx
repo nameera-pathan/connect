@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import { useRef } from "react"
@@ -26,7 +26,7 @@ const EditPicAndStats = () => {
     }
 
     const handleImageUploadChange = (e) =>{
-        console.log(e.target.files.length)
+        // console.log(e.target.files.length)
         if(e.target.files.length > 0) { 
             const file = e.target.files[0] 
             if(file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/webp' ){
@@ -37,7 +37,8 @@ const EditPicAndStats = () => {
             }
             else{
                 setPicture(file)
-                console.log('picture: ',file.name)
+                // console.log('picture: ',file.name)
+
                 // For reading image file.
                 const reader = new FileReader()
                 // reading it as data url, so i can get as base64 as data url.
@@ -63,7 +64,7 @@ const EditPicAndStats = () => {
                 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloud_name}/image/upload`;
                 const {data} = await axios.post(cloudinaryUrl, formData)
                 imageToUpload = data.secure_url
-                console.log(data)
+                // console.log(data)
             } catch (err) {
                 console.log(err)
             }
@@ -74,15 +75,21 @@ const EditPicAndStats = () => {
                 token: token
             })
         )
-        if (status === 'success') {
-            navigate('/');
-        }
+        // console.log(status)
+        navigate('/')
+        // if (status === 'success') {
+        //     navigate('/');
+        // }
         dispatch(changeIsNew())
     }   
 
     const handleSkip = () => {
         navigate('/')
     }
+
+    // useEffect(()=>{
+    //     console.log(user)
+    // },[])
 
     return (
     <section className="flex items-center justify-center min-h-screen dark:bg-dark_bg_1 dark">
@@ -94,7 +101,7 @@ const EditPicAndStats = () => {
                 <p className="text-center text-sm text-gray-500 mb-1">and editing your status.</p>
             </>  
             :<>
-            <h4 className="text-xl font-bold text-slate-200 text-center tracking-wide">Current image and status</h4>
+            <h4 className="text-xl font-bold text-slate-200 text-center tracking-wide">Edit image and status</h4>
             <p className="text-center text-md text-gray-500 mb-2">To change profile picture click on your profile picture and select your picture.</p>
             </>
             }

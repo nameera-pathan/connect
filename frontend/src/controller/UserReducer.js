@@ -102,7 +102,7 @@ export const userSlice = createSlice({
         })
         .addCase(updateUserInfoThunk.fulfilled, (state, action)=>{
             state.status = 'success'
-            state.user = {...state.user,picture:action.payload.picture, status:action.payload.status}
+            state.user = {...state.user, picture:action.payload.picture, status:action.payload.status}
             state.error = ''
         })
         .addCase(updateUserInfoThunk.rejected, (state, action)=>{

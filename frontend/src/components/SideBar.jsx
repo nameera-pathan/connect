@@ -1,7 +1,15 @@
 import { useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {ChatIcon, CommunityIcon, DotsIcon, StoryIcon } from "../assets"
-import Notification from "./Notification"
+import { useNavigate } from 'react-router-dom'
+import {DotsIcon, StoryIcon, NotificationIcon,
+    AddContactIcon, ArrowIcon, AttachmentIcon, CallIcon, CameraIcon, 
+    ChatIcon, CloseIcon, CommunityIcon, ContactIcon, DialIcon, DocumentIcon,
+    EmojiIcon, FilterIcon, LockIcon, Logo, MuteIcon, NoVideoIcon,
+      PhotoIcon, PollIcon, ReturnIcon, SearchIcon, SearchLargeIcon,
+      SeenIcon, SendIcon, SmallArrowIcon, SpeakerIcon, StickerIcon,
+       TraingleIcon, ValidIcon, VideoCallIcon, VideoDialIcon
+} from "../assets"
+// import Notification from "./Notification"
 import Search from "./Search"
 import Conversations from "./Conversations"
 import SearchResults from "./SearchResults"
@@ -14,21 +22,23 @@ export default function SideBar({onlineUsers, isTyping}) {
     const inputRef = useRef()
     const [show, setShow] = useState()
     const [showCreateGroup, setShowCreateGroup] = useState(false)
+    const navigate = useNavigate()
     
     return (
         <>
         <section className="h-full select-none w-[40%]  border-r-[6px]">
-                    <div className="h-[50px] bg-dark_bg_2 flex items-center p-[16px]">
+                    <div className="h-[70px] bg-dark_bg_2 flex items-center p-[16px]">
                         <div className="w-full flex justify-between items-center ">
-                            <button type="btn" className="w-[40px] h-[40px] rounded-full flex items-center justify-center">
+
+                            <button type="btn" className="w-[40px] h-[40px] rounded-full flex items-center justify-center"
+                            onClick={()=>{navigate('/edit')}}>
                             <img src={user.picture} alt="logo" className="w-[40px] h-[40px] rounded-full object-cover"/>
                             </button>
+                            <span>
+                                <span className="test-sm">{user.name}</span> <br/>
+                                <span className="text-sm">{`@${user.username}`}</span>
+                            </span>
                             <ul className="flex items-center gap-x-2 5">
-                                <li>
-                                <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center hover:bg-dark_hover_1">
-                                    <CommunityIcon className='dark:fill-dark_svg_1' />
-                                </button>
-                                </li>
                                 <li>
                                 <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center hover:bg-dark_hover_1">
                                     <StoryIcon className='dark:fill-dark_svg_1' />
@@ -36,7 +46,7 @@ export default function SideBar({onlineUsers, isTyping}) {
                                 </li>
                                 <li>
                                 <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center hover:bg-dark_hover_1">
-                                    <ChatIcon className='dark:fill-dark_svg_1' />
+                                    <AddContactIcon className='dark:fill-dark_svg_1' />
                                 </button>
                                 </li>
                                 <li className="relative" onClick={()=>{setShowDotsMenu((state)=>!state) }}>
@@ -51,7 +61,7 @@ export default function SideBar({onlineUsers, isTyping}) {
                 {/* CREATE GROUP  */}
                  { showCreateGroup && <CreateGroup setShowCreateGroup={setShowCreateGroup}/> }
 
-                    <Notification/>
+                    {/* <Notification/> */}
                     <Search searchLength={searchResults.length}  
                     setSearchResults={setSearchResults} 
                     inputRef={inputRef}

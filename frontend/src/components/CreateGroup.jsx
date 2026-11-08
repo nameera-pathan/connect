@@ -23,7 +23,7 @@ export default function CreateGroup({ setShowCreateGroup }) {
         setSearchResults([])
         if(e.target.value && e.key == 'Enter'){
             try {
-                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/search?q=${e.target.value}`,  {
+                const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/search?u=${e.target.value}`,  {
                     headers: {Authorization: `Bearer ${token}`}
                 })
                 if(response.data.data.length > 0){
@@ -55,9 +55,14 @@ export default function CreateGroup({ setShowCreateGroup }) {
                 users.push(usr.value)
             })
             let values = {
-                name, users, token
+                name, users
             }
+            // console.log(values)
             let conversation = await dispatch(createGroupConversationThunk(values))
+            setShowCreateGroup(false)
+            // await dispatch(getActiveConversationThunk({receiverId: receiverId, convoId: convoId ? convoId : false, token: token})
+            // navigate('/')
+            console.log(conversation)
         }
     }
 
@@ -82,7 +87,8 @@ export default function CreateGroup({ setShowCreateGroup }) {
                 {/* multiple select */}
                 <div className='mt-4'>
                     <Select 
-                    options={searchResults} 
+                    options={searchResults}
+                    // options={options} 
                     onChange={setSelectedUsers}
                     onKeyDown={(e) => handleSearch(e)}
                     placeholder='Search users, select' 
