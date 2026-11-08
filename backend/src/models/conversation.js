@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const conversationSchema = new mongoose.Schema({
     name:{
         type:String,
-        required:true
+        required:true,
+        trim: true
     },
     picture:{
         type:String,

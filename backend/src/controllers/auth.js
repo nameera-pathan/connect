@@ -58,8 +58,6 @@ const register = async (req, res) => {
     }
 }
 
-
-
 const login = async (req, res) => {
     try {
         validateLogin(req.body)
@@ -110,7 +108,7 @@ const login = async (req, res) => {
 const editInfo = async (req, res) => {
     try {
         const {picture, status} = req.body
-        const user = await User.findOne({_id:req.user._id})
+        const user = await User.findOne({_id:req.user.id})
         if(picture !== '') user.picture = picture
         if(status !== '') user.status = status
         await user.save()
