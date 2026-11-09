@@ -64,9 +64,6 @@ const openAndCreateCoversation = async (req, res) =>{
             }
             
         }
-
-
-
     } catch (err) {
         res.status(400).send(err.message)
     }
@@ -107,11 +104,11 @@ const createGroupConversation = async (req, res) =>{
         .populate('members', '_id name username email picture')
         .populate('latestMessage', '_id createdAt message seen')
         res.send({
-            user: receiver,
+            message:"group conversation created succesfully!",
             data:populatedConvoData
         })
     } catch (error) {
-        
+        res.status(400).send(err.message)
     }
 }
 
