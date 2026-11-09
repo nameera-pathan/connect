@@ -95,13 +95,13 @@ export const createGroupConversationThunk = createAsyncThunk('conversation/creat
         // Get token from userReducer
         const token = await state.user.user.token;
         // API Call with token
-        // console.log("group thunk --> ", values)
+        // console.log("group thunk val--> ", values)
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/group`, values,      
             {  
                 headers: {Authorization: `Bearer ${token}`},
             })
-        // console.log(response.data.data)    
-        return response.data.conversations
+        // console.log("group thunk res ---> ", response.data)    
+        return response.data.data
     } catch (err) {
         console.log(err.response.data)
         return rejectWithValues(err.response.data)
@@ -136,7 +136,7 @@ export const chatSlice = createSlice({
         },
         addFiles:(state, action)=>{
             state.files = [...state.files, action.payload]
-            // console.log('addFiles: ' ,state.files)
+            console.log('addFiles: ' ,state.files)
         },
         clearFiles:(state, action)=>{
             state.files = []
@@ -203,17 +203,28 @@ export const chatSlice = createSlice({
         .addCase(sendMessageThunk.rejected, (state)=>{
             state.status = 'failed'
         })
-        // .addCase(createGroupConversationThunk.pending, (state)=>{
-        //     state.status = 'loading'
-        // })
-        // .addCase(createGroupConversationThunk.fulfilled, (state, action)=>{
-        //     state.status = 'success'
-        //     state.error = ''
-        //     state.messages= action.payload
-        // })
-        // .addCase(createGroupConversationThunk.rejected, (state)=>{
-        //     state.status = 'failed'
-        // })
+        .addCase(createGroupConversationThunk.pending, (state)=>{
+            state.status = 'loading'
+        })
+        .addCase(createGroupConversationThunk.fulfilled, (state, action)=>{
+            state.status = 'success';
+            state.error = '';
+
+            const newConversation = action.payload;
+            // console.log("conversation - ",newConversation)
+
+            // Add new group to conversations list
+            let ConvosExcludingNewConversation = state.conversations.filter((c)=>(newConversation._id !== c._id))
+            let convos = [ newConversation, ...ConvosExcludingNewConversation]
+            state.conversations = [...convos]
+            // Clear previous messages and files
+            state.messages = [];
+            state.files = [];
+        })
+        .addCase(createGroupConversationThunk.rejected, (state, action)=>{
+            state.status = 'failed';
+            state.error = action.payload || action.error.message;
+        })
     }    
 })
 

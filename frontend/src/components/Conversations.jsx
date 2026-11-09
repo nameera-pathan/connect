@@ -1,15 +1,15 @@
-import { useState, useContext, useEffect } from 'react'
+import { useContext} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { GetReceiver, MomentDate } from '../hooks'
-import { getActiveConversationThunk, getConversationThunk } from '../controller/ChatReducer'
+import { getActiveConversationThunk} from '../controller/ChatReducer'
 import SocketContext from '../context'
 import { PulseLoader } from 'react-spinners'
-import { logoutAction } from '../controller/UserReducer'
+// import { logoutAction } from '../controller/UserReducer'
 
 export default function Conversations({onlineUsers, isTyping}) {
     const socket = useContext(SocketContext)
     const dispatch = useDispatch()
-    const [convos, setConvos] = useState([])
+    // const [convos, setConvos] = useState([])
     const {user} = useSelector(state => state.user)
     const {conversations, activeConversation, status} = useSelector(state => state.chat)
 
@@ -20,12 +20,6 @@ export default function Conversations({onlineUsers, isTyping}) {
         let conversation = await dispatch(getActiveConversationThunk({receiverId: receiverId, convoId: convoId ? convoId : false, token: token}))
         socket.emit('join conversation', conversation.payload._id)
     }
-
-    // useEffect(()=>{
-    //     if(conversations.length===0){
-    //         dispatch(logoutAction())
-    //     }
-    // },[conversations])    
 
     return (
         <section className='convos scrollbar'>
