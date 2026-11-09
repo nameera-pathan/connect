@@ -27,7 +27,7 @@ export default function Search({searchLength, setSearchResults, inputRef, show, 
         <section className='h-[49px] py-1.5'>
             <div className='px-[10px]'>
                 {/* search input */}
-                <div className="flex items-center gap-x-2">
+                <div className="flex items-center gap-x-2 mt-1">
                     <div className="w-full bg-dark_bg_2 rounded-lg pl-2 flex ">
                         {show || searchLength > 0 
                         ? <span className="w-8 flex items-center justify-center rotateAnimation cursor-pointer" onClick={()=>{
@@ -50,9 +50,9 @@ export default function Search({searchLength, setSearchResults, inputRef, show, 
                           spellCheck='false'
                           />
                     </div>
-                    <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center">
+                    {/* <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center">
                         <FilterIcon className='dark:fill-white' />
-                    </button>
+                    </button> */}
                     
                 </div>
 

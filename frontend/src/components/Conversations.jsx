@@ -23,7 +23,8 @@ export default function Conversations({onlineUsers, isTyping}) {
 
     return (
         <section className='convos scrollbar'>
-            <ul>
+        { conversations.length > 0 
+           ? <ul>
             {
                 conversations && conversations
                 .filter((conversation)=>(conversation.latestMessage || conversation._id === activeConversation._id || conversation.isGroup === true))
@@ -86,6 +87,11 @@ export default function Conversations({onlineUsers, isTyping}) {
                 })
             }
             </ul>
+
+          : <div className='flex justify-center items-center h-[100%] text-sm text-gray-400'>     
+                You don't have any conversations yet.
+            </div> }
+
         </section>
     )
 }

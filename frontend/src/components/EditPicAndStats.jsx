@@ -75,21 +75,14 @@ const EditPicAndStats = () => {
                 token: token
             })
         )
-        // console.log(status)
         navigate('/')
-        // if (status === 'success') {
-        //     navigate('/');
-        // }
         dispatch(changeIsNew())
     }   
 
-    const handleSkip = () => {
+    const handleSkip = async () => {
+        await dispatch(changeIsNew())
         navigate('/')
     }
-
-    // useEffect(()=>{
-    //     console.log(user)
-    // },[])
 
     return (
     <section className="flex items-center justify-center min-h-screen dark:bg-dark_bg_1 dark">
