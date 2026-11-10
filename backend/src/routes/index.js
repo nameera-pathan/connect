@@ -5,7 +5,7 @@ const { openAndCreateCoversation,  getConversations, createGroupConversation } =
 const { userAuth } = require('../middlewares/userAuth')
 const { sendMessage, getConversationMessages } = require('../controllers/message')
 const { sendRequest, viewAllRequests, acceptAndRejectRequests, viewAllFriends } = require('../controllers/request')
-const { viewAllNotifications } = require('../controllers/notification')
+const { viewAllNotifications, markNotificationSeen } = require('../controllers/notification')
 
 
 
@@ -17,7 +17,6 @@ Router.post('/logout', trimRequest.all, logout)
 Router.post('/refreshtoken', trimRequest.all, refreshToken)
 Router.get('/middleware', trimRequest.all, userAuth )
 
-
 Router.patch('/edit', trimRequest.all, userAuth, editInfo)
 Router.get('/search', trimRequest.all, userAuth, search)
 
@@ -28,14 +27,17 @@ Router.get('/conversations', trimRequest.all, userAuth, getConversations)
 Router.post('/send/message', trimRequest.all, userAuth, sendMessage)
 Router.get('/conversation/:convoId', trimRequest.all, userAuth, getConversationMessages)
 
-Router.get('/requests', trimRequest.all, userAuth, viewAllRequests )
-Router.post('/request/send/:id', trimRequest.all, userAuth, sendRequest)
-Router.post('/requests/:status/:id', trimRequest.all, userAuth, acceptAndRejectRequests)
+Router.post('/send/request', trimRequest.all, userAuth, sendRequest)
+Router.post('/request', trimRequest.all, userAuth, acceptAndRejectRequests)
+Router.get('/requests', trimRequest.all, userAuth, viewAllRequests)
 Router.get('/notifications', trimRequest.all, userAuth, viewAllNotifications)
 Router.get('/friends', trimRequest.all, userAuth, viewAllFriends)
 
-// todo ----> 
-Router.patch('/notifications/seen/:id', trimRequest.all, userAuth, )
+// Router.post('/follow/status', userAuth, followAndUnfollowUser)
+// Router.get('/followers', trimRequest.all, userAuth, followers)
+// Router.get('/following', trimRequest.all, userAuth, following)
+
+Router.patch('/notifications/seen', trimRequest.all, userAuth, markNotificationSeen)
 
 module.exports = Router
 

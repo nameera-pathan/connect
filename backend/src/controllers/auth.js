@@ -43,6 +43,8 @@ const register = async (req, res) => {
                 friends: data.friends,
                 followers: data.followers,
                 following: data.following,
+                requests:data.requests,
+                notifications:data.notifications,
                 tag: data.tag,
                 bio: data.bio,
                 isNew: isNew
@@ -96,6 +98,8 @@ const login = async (req, res) => {
                 password:user.password,
                 followers: user.followers,
                 following: user.following,
+                requests: user.requests,
+                notifications: user.notifications,
                 tags: user.tags,
                 bio: user.bio,
             }
@@ -122,7 +126,6 @@ const editInfo = async (req, res) => {
                 status: user.status,
                 phonenumber: user.phonenumber,
                 username:user.username,
-                password:user.password
             }
         })
     } catch (err) {
@@ -204,10 +207,12 @@ const refreshToken = async (req, res) => {
                 phonenumber: user.phonenumber,
                 username:user.username,
                 friends:user.friends,
+                followers:user.followers,
+                following:user.following,
+                requests:user.requests,
+                notifications:user.notifications
             }
         })                  
-         
-
     } catch (error) {
         res.status(400).send('badrequest') 
     }

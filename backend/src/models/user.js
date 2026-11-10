@@ -52,7 +52,9 @@ const UserSchema = new mongoose.Schema({
     bio:{
         type:String,
         default:""
-    }
+    },
+    notifications:[Object],
+    requests:[Object]
 },{
     collection:'users',
     timestamps:true
