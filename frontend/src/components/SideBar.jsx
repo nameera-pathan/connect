@@ -16,6 +16,8 @@ import SearchResults from "./SearchResults"
 import SidebarMenu from "./SidebarMenu"
 import CreateGroup from "./CreateGroup"
 import Requests from "./Requests"
+import { getRequestsThunk, getNotificationsThunk } from '../controller/UserReducer'
+
 export default function SideBar({onlineUsers, isTyping}) {
     const {user} = useSelector((state)=>state.user)
     const [searchResults, setSearchResults] = useState([])
@@ -27,29 +29,32 @@ export default function SideBar({onlineUsers, isTyping}) {
     const [showSearchAndConvo, setShowSearchAndConvo] = useState(true)
     const [showNotifications, setShowNotifications] = useState(false)
     const navigate = useNavigate()
-    
+    const dispatch = useDispatch()
+
     const handleShowRequest = () =>{
         setShowRequests(true)
         setShowNotifications(false)
         setShowSearchAndConvo(false)
+        dispatch(getRequestsThunk())
     }
     const handleShowNotifications = () =>{
         setShowNotifications(true)
         setShowRequests(false)
         setShowSearchAndConvo(false)
+        dispatch(getNotificationsThunk())
     }
 
     return (
         <>
         <section className="h-full select-none w-[40%]  border-r-[6px]">
                     <div className="h-[70px] bg-dark_bg_2 flex items-center p-[16px]">
-                        <div className="w-full flex justify-between items-center ">
+                        <div className="w-full flex justify-between items-center mt-2">
 
                             {/* profile image, username and name */}
                             <div className="flex items-center gap-x-2">
-                                <button type="btn" className="w-[40px] h-[40px] rounded-full flex items-center justify-center"
+                                <button type="btn" className="w-[50px] h-[50px] rounded-full flex items-center justify-center"
                                 onClick={()=>{navigate('/edit')}}>
-                                <img src={user.picture} alt="logo" className="w-[40px] h-[40px] rounded-full object-cover"/>
+                                <img src={user.picture} alt="logo" className="w-[50px] h-[50px] rounded-full object-cover"/>
                                 </button>
                                 <span>
                                     <span className="test-sm">{user.name}</span> <br/>
@@ -82,16 +87,15 @@ export default function SideBar({onlineUsers, isTyping}) {
 
                 {/* profile values */}
                     <div className="flex justify-end dark:bg-dark_bg_2">
-                        <div className='h-[50px] dark:bg-dark_bg_2 flex items-center justify-center p-[13px] gap-x-10 text-xs w-[94%]'>
-                                <span className="">{`friends ${user.friends}`}</span>
-                                <span className="">{`followers ${user.followers}`}</span>
-                                <span className="">{`following ${user.following}`}</span>
+                        <div className='h-[50px] dark:bg-dark_bg_2 flex items-center justify-center p-[13px] gap-x-10 text-xs w-[84%]'>
+                                <span className="">{`${user.friends} friends`}</span>
+                                <span className="">{`${user.followers} followers`}</span>
+                                <span className="">{`${user.following} following`}</span>
                         </div>
                     </div>
 
                 {/* border bottom */}
                     <div className="border-b"></div>
-
 
                 {/* CREATE GROUP  */}
                 { showCreateGroup && <CreateGroup setShowCreateGroup={setShowCreateGroup} /> }
@@ -103,12 +107,13 @@ export default function SideBar({onlineUsers, isTyping}) {
                 { showRequests && (<Requests setShowRequests={setShowRequests} setShowSearchAndConvo={setShowSearchAndConvo} /> ) }
 
                 {/* Search and Conversations */}
-                { showSearchAndConvo  &&  <>  <Search searchLength={searchResults.length}  
-                        setSearchResults={setSearchResults} 
-                        inputRef={inputRef}
-                        show={show}
-                        setShow={setShow}
-                        />
+                { showSearchAndConvo  &&  
+                        <>  <Search searchLength={searchResults.length}  
+                            setSearchResults={setSearchResults} 
+                            inputRef={inputRef}
+                            show={show}
+                            setShow={setShow}
+                            />
                         {
                             searchResults.length > 0 
                             ? <SearchResults searchResults={searchResults} 
@@ -118,7 +123,7 @@ export default function SideBar({onlineUsers, isTyping}) {
                                 />
                             : <Conversations onlineUsers={onlineUsers} isTyping={isTyping}/>
                         }
-                    </>   } 
+                </>   } 
 
 
         </section>

@@ -313,11 +313,19 @@ export default function DisplayMessages({onlineUsers, isTyping, callUser, setCal
                                 <img src={activeConversation.picture} alt="" className='w-full h-full rounded-full object-cover'/>        
                             </button>
                             <div className="flex flex-col">
-                                <h1 className="text-white text-md font-bold">{
-                                !activeConversation.isGroup ?
-                                (activeConversation.members[0]._id === user.id ? activeConversation.members[1].name : activeConversation.members[0].name) 
-                                : activeConversation.name    
-                            }</h1>
+                                <h1 className="text-white text-sm font-bold">
+                                    {
+                                        !activeConversation.isGroup ?
+                                        (activeConversation.members[0]._id === user.id ? activeConversation.members[1].name : activeConversation.members[0].name) 
+                                        : activeConversation.name    
+                                    }
+                                     &nbsp; .&nbsp;
+                                    @{
+                                        !activeConversation.isGroup ?
+                                        (activeConversation.members[0]._id === user.id ? activeConversation.members[1].username : activeConversation.members[0].username) 
+                                        : activeConversation.username    
+                                    }                                    
+                                </h1>
                                 <span className="text-xs text-dark_svg_2">{activeConversation.isGroup ? '' : online}</span>
                             </div>
                         </div>

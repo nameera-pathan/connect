@@ -5,7 +5,9 @@ const initialState = {
     loginError:'',
     status:'',
     error:'',
-    user:{}
+    user:{},
+    requests:null,
+    notifications:null
 }
 
 export const registerUserThunk = createAsyncThunk('auth/register', async (values, {rejectWithValue})=>{
@@ -40,21 +42,63 @@ export const updateUserInfoThunk = createAsyncThunk('info/edit', async (values, 
     }
 })
 
-export const logoutUserThunk = createAsyncThunk('auth/logout', async ( {getState, rejectWithValue})=>{
+export const logoutUserThunk = createAsyncThunk('auth/logout', async ( {rejectWithValue})=>{
     try {
-
-         // Access the entire Redux state
-        // const state = getState();
-
-        // // Get token from userReducer
-        // const chat = await state.chat.chat;
-
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/logout`, ) 
         return response.data
     } catch (err) {
         return rejectWithValue(err.response.data)
     }
 })
+
+export const getRequestsThunk = createAsyncThunk('profile/requests', async (_, {getState, rejectWithValue})=>{
+    try {
+        let state = getState()
+        let token = state.user.user.token
+        console.log('requests reducer ')
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/requests`, 
+            { headers: {Authorization: `Bearer ${token}`} } 
+        )
+        const data = response.data.data
+        console.log('requests reducer - ', response.data)
+        return data
+    } catch (err) {
+        return rejectWithValue(err.response.data)
+    }
+})
+
+export const getNotificationsThunk = createAsyncThunk('profile/notifications', async (_, {getState, rejectWithValue})=>{
+    try {
+        let state = getState()
+        let token = state.user.user.token
+        console.log('notify reducer ')
+        const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/notifications`, 
+            { headers: {Authorization: `Bearer ${token}`} } 
+        )
+        const data = response.data.data
+        console.log('notify reducer - ', response.data)
+        return data
+    } catch (err) {
+        return rejectWithValue(err.response.data)
+    }
+})
+
+export const sendRequestThunk = createAsyncThunk('send/request', async (values, {getState, rejectWithValue})=>{
+    try {
+        let state = getState()
+        let token = state.user.user.token
+        console.log('send request reducer -', values)
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/send/request`, values,
+            { headers: {Authorization: `Bearer ${token}`} } 
+        )
+        const data = response.data.data
+        console.log('send request reducer - ', response.data)
+        return data
+    } catch (err) {
+        return rejectWithValue(err.response.data)
+    }
+})
+
 
 export const userSlice = createSlice({
     name: 'user',
@@ -121,9 +165,42 @@ export const userSlice = createSlice({
             state.status = 'failed'
             state.error = action.payload
         })
+        .addCase(getRequestsThunk.pending, (state)=>{
+            state.status = 'loading'
+        })
+        .addCase(getRequestsThunk.fulfilled, (state, action)=>{
+            state.status = 'success'
+            if(!action.payload) return 
+            console.log(action.payload)
+            state.requests = action.payload
+            state.error = ''
+        })
+        .addCase(getRequestsThunk.rejected, (state, action)=>{
+            state.status = 'failed'
+            state.error = action.payload
+        })
+        .addCase(getNotificationsThunk.pending, (state)=>{
+            state.status = 'loading'
+        })
+        .addCase(getNotificationsThunk.fulfilled, (state, action)=>{
+            state.status = 'success'
+            if(!action.payload) return 
+            state.notifications = action.payload
+            state.error = ''
+        })
+        .addCase(getNotificationsThunk.rejected, (state, action)=>{
+            state.status = 'failed'
+            state.error = action.payload
+        })
     }
 })
 
 export const {logoutAction, changeIsNew} = userSlice.actions;
 
 export default userSlice.reducer;
+
+
+
+  
+
+
