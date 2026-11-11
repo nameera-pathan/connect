@@ -18,7 +18,7 @@ import CreateGroup from "./CreateGroup"
 import Requests from "./Requests"
 import { getRequestsThunk, getNotificationsThunk } from '../controller/UserReducer'
 
-export default function SideBar({onlineUsers, isTyping, requestsList}) {
+export default function SideBar({onlineUsers, isTyping, requestsList, notificationsList}) {
     const {user} = useSelector((state)=>state.user)
     const [searchResults, setSearchResults] = useState([])
     const [showDotsMenu, setShowDotsMenu] = useState(false)
@@ -66,7 +66,13 @@ export default function SideBar({onlineUsers, isTyping, requestsList}) {
 
                             <ul className="flex items-center gap-x-2 5">
                                 <li>
-                                <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center hover:bg-dark_hover_1"
+                                <button className={`w-[40px] h-[40px] rounded-full flex items-center justify-center hover:bg-dark_hover_1
+                                 ${ notificationsList.length > 0 ?     
+                                    `relative before:absolute before:-top-1 before:-right-1 before:content-['${notificationsList.length}'] 
+                                    before:flex before:items-center before:justify-center before:w-5 before:h-5 before:text-[10px] 
+                                    before:font-bold before:text-white before:bg-red-500 before:rounded-full` : ''
+                                 } 
+                                `}
                                 onClick={()=>handleShowNotifications()}>
                                     <NotificationIcon className='dark:fill-dark_svg_1' />
                                 </button>

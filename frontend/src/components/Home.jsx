@@ -185,7 +185,8 @@ const Home = () => {
         <section className="h-screen flex justify-center items-center bg-dark_bg_1 border overflow-hidden border py-4">
           <div className="container flex border w-full h-full">
 
-            <SideBar onlineUsers={usersOnline} isTyping={isTyping} requestsList={requestsList}/>
+            <SideBar onlineUsers={usersOnline} isTyping={isTyping}
+             requestsList={requestsList} notificationsList={notificationsList}/>
             {activeConversation._id 
             //  && activeConversation.members[1]._id === user.id
             ? <DisplayMessages onlineUsers={usersOnline} isTyping={isTyping} 
