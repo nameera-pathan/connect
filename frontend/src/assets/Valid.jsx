@@ -5,8 +5,8 @@ function ValidIcon({ className }) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
-      width="700pt"
-      height="700pt"
+      width="24"
+      height="24"
       viewBox="0 0 700 700"
       className={className}
     >

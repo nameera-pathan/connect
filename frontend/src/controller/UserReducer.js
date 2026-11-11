@@ -6,7 +6,7 @@ const initialState = {
     status:'',
     error:'',
     user:{},
-    requests:null,
+    requests:[],
     notifications:null
 }
 
@@ -55,12 +55,12 @@ export const getRequestsThunk = createAsyncThunk('profile/requests', async (_, {
     try {
         let state = getState()
         let token = state.user.user.token
-        console.log('requests reducer ')
+        // console.log('requests reducer ')
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/requests`, 
             { headers: {Authorization: `Bearer ${token}`} } 
         )
         const data = response.data.data
-        console.log('requests reducer - ', response.data)
+        // console.log('requests reducer - ', response.data)
         return data
     } catch (err) {
         return rejectWithValue(err.response.data)
@@ -171,7 +171,7 @@ export const userSlice = createSlice({
         .addCase(getRequestsThunk.fulfilled, (state, action)=>{
             state.status = 'success'
             if(!action.payload) return 
-            console.log(action.payload)
+            // console.log(action.payload)
             state.requests = action.payload
             state.error = ''
         })

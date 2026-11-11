@@ -86,19 +86,12 @@ export const sendMessageThunk = createAsyncThunk('message/send', async (values, 
 
 export const createGroupConversationThunk = createAsyncThunk('conversation/create_group', async (values, {getState, rejectWithValues})=>{
     try {
-        // const token = values.token;
-        // Access the entire Redux state
         const state = getState();
-
-        // Get token from userReducer
         const token = await state.user.user.token;
-        // API Call with token
-        // console.log("group thunk val--> ", values)
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/group`, values,      
             {  
                 headers: {Authorization: `Bearer ${token}`},
-            })
-        // console.log("group thunk res ---> ", response.data)    
+            }) 
         return response.data.data
     } catch (err) {
         console.log(err.response.data)

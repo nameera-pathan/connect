@@ -18,7 +18,7 @@ import CreateGroup from "./CreateGroup"
 import Requests from "./Requests"
 import { getRequestsThunk, getNotificationsThunk } from '../controller/UserReducer'
 
-export default function SideBar({onlineUsers, isTyping}) {
+export default function SideBar({onlineUsers, isTyping, requestsList}) {
     const {user} = useSelector((state)=>state.user)
     const [searchResults, setSearchResults] = useState([])
     const [showDotsMenu, setShowDotsMenu] = useState(false)
@@ -30,6 +30,9 @@ export default function SideBar({onlineUsers, isTyping}) {
     const [showNotifications, setShowNotifications] = useState(false)
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const requests = useSelector((state)=>state.user.requests)
+    // console.log("comp - ",requests)
 
     const handleShowRequest = () =>{
         setShowRequests(true)
@@ -43,7 +46,6 @@ export default function SideBar({onlineUsers, isTyping}) {
         setShowSearchAndConvo(false)
         dispatch(getNotificationsThunk())
     }
-
     return (
         <>
         <section className="h-full select-none w-[40%]  border-r-[6px]">
@@ -69,8 +71,13 @@ export default function SideBar({onlineUsers, isTyping}) {
                                     <NotificationIcon className='dark:fill-dark_svg_1' />
                                 </button>
                                 </li>
-                                <li>
-                                <button className="w-[40px] h-[40px] rounded-full flex items-center justify-center hover:bg-dark_hover_1"
+                                <li className="">
+                                <button className={`w-[40px] h-[40px] rounded-full flex items-center justify-center hover:bg-dark_hover_1
+                                ${ requestsList.length > 0 ?     
+                                    `relative before:absolute before:-top-1 before:-right-1 before:content-['${requestsList.length}'] 
+                                    before:flex before:items-center before:justify-center before:w-5 before:h-5 before:text-[10px] 
+                                    before:font-bold before:text-white before:bg-red-500 before:rounded-full` : ''
+                                 } `}
                                 onClick={()=>handleShowRequest()}>
                                     <AddContactIcon className='dark:fill-dark_svg_1' />
                                 </button>

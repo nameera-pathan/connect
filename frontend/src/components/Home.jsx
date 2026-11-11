@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
 import SideBar from "./SideBar"
 import { getConversationThunk, updateMessagesAction } from "../controller/ChatReducer"
+import { getRequestsThunk, getNotificationsThunk } from "../controller/UserReducer"
 import DisplayNone from "./DisplayNone"
 import DisplayMessages from "./DisplayMessages"
 import SocketContext from "../context"
@@ -32,14 +33,29 @@ const Home = () => {
     const [callAccepted, setCallAccepted] = useState(false)
     const [stream, setStream] = useState()
     const [totalSecInCall, setTotalSecInCall] = useState(0)
+    const [requestsList, setRequestsList] = useState([])
+    const [notificationsList, setNotificationsList] = useState([])
 
     const myVideo = useRef()
     const userVideo = useRef()
     const connectionRef = useRef()
 
-    useEffect(()=>{
+    // console.log("req comp - ",requests)
 
-    },[activeConversation])
+    useEffect(()=>{
+      const getResponse = async () =>{
+        let resRequests = await dispatch(getRequestsThunk())
+        let arrReq = resRequests.payload
+        let resNotifications = await dispatch(getNotificationsThunk())
+        let arrNot = resNotifications.payload
+        if(arrReq) await setRequestsList([...arrReq])
+        if(arrNot) await setNotificationsList([...arrNot])    
+
+
+        // console.log(requestsList)
+      }
+      getResponse()
+    },[dispatch])
 
     useEffect(()=>{
       if(user){
@@ -87,7 +103,6 @@ const Home = () => {
         }
       })
     },[])
-
 
     const setupMedia = () => {
       navigator.mediaDevices
@@ -170,7 +185,7 @@ const Home = () => {
         <section className="h-screen flex justify-center items-center bg-dark_bg_1 border overflow-hidden border py-4">
           <div className="container flex border w-full h-full">
 
-            <SideBar onlineUsers={usersOnline} isTyping={isTyping} />
+            <SideBar onlineUsers={usersOnline} isTyping={isTyping} requestsList={requestsList}/>
             {activeConversation._id 
             //  && activeConversation.members[1]._id === user.id
             ? <DisplayMessages onlineUsers={usersOnline} isTyping={isTyping} 

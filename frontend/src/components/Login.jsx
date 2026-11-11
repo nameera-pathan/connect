@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useDispatch, useSelector } from "react-redux"
-import { loginUserThunk } from "../controller/UserReducer"
+import { loginUserThunk, getRequestsThunk, getNotificationsThunk  } from "../controller/UserReducer"
+
 import { PulseLoader } from "react-spinners"
 import { resetChat } from '../controller/ChatReducer'
+
 // import validator from 'validator'
 
 const Login = () => {
@@ -26,6 +28,8 @@ const Login = () => {
           email: data.email, password: data.password
         }
         dispatch(loginUserThunk(values))
+        // dispatch(getRequestsThunk())
+        // dispatch(getNotificationsThunk())
         setData({
             email:'',
             password:'',
@@ -41,6 +45,8 @@ const Login = () => {
             email: data.email, password: data.password
         }
         dispatch(loginUserThunk(values))
+        // dispatch(getRequestsThunk())
+        // dispatch(getNotificationsThunk())
         setData({
             email:'',
             password:'',
