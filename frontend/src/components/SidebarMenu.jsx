@@ -18,7 +18,7 @@ export default function SidebarMenu({ setShowCreateGroup }) {
                     <span>New group</span>
                 </li>
                 <li className='py-3 pl-5 cursor-pointer hover:bg-dark_bg_3' onClick={()=>{navigate('/edit')}}>
-                    <span>Edit Profile</span>
+                    <span>Profile</span>
                 </li>
                 <li className='py-3 pl-5 cursor-pointer hover:bg-dark_bg_3' onClick={handleLogout}>
                     <span>Logout</span>

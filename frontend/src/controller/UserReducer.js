@@ -7,7 +7,9 @@ const initialState = {
     error:'',
     user:{},
     requests:[],
-    notifications:null
+    notifications:[],
+    reqDot:false,
+    notDot:false
 }
 
 export const registerUserThunk = createAsyncThunk('auth/register', async (values, {rejectWithValue})=>{
@@ -71,12 +73,12 @@ export const getNotificationsThunk = createAsyncThunk('profile/notifications', a
     try {
         let state = getState()
         let token = state.user.user.token
-        console.log('notify reducer ')
+        // console.log('notify reducer ')
         const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/notifications`, 
             { headers: {Authorization: `Bearer ${token}`} } 
         )
         const data = response.data.data
-        console.log('notify reducer - ', response.data)
+        // console.log('notify reducer - ', response.data)
         return data
     } catch (err) {
         return rejectWithValue(err.response.data)
@@ -99,6 +101,20 @@ export const sendRequestThunk = createAsyncThunk('send/request', async (values, 
     }
 })
 
+export const acceptAndRejectThunk = createAsyncThunk('/request', async (values, {getState, rejectWithValue}) =>{
+    try {
+        let state = getState()
+        let token = state.user.user.token
+        const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/request`, values,
+            { headers: {Authorization: `Bearer ${token}`} } 
+        )
+        const data = response.data.data 
+        return data
+    } catch (err) {
+        return rejectWithValue(err.response.data)
+    }
+})
+
 
 export const userSlice = createSlice({
     name: 'user',
@@ -109,10 +125,37 @@ export const userSlice = createSlice({
                 state.user.isNew = false
             }
         },
+        updateRequestsAction:(state, action)=>{
+            let ids = action.payload.map((r)=>{
+                let id = r._id
+                return id
+            })
+            let doesReqExist = state.requests.includes(...ids)
+            if(!doesReqExist){
+                state.requests = [...action.payload]
+            }
+            // console.log(action.payload)         
+        },
+        updateNotificationsAction:(state, action)=>{
+            let ids = action.payload.map((n)=>{
+                let id = n._id
+                return id
+            })
+            let doesNotificationExist = state.notifications.includes(...ids)
+            // console.log("ids - ", doesNotificationExist)
+            if(!doesNotificationExist){
+                state.notifications = [...action.payload]
+            }       
+        },
+        acceptRequestAction:(state, action) =>{
+            // to do
+        },
         logoutAction: (state)=>{
             state.status = ''
             state.error = ''
             state.user = {}
+            state.requests = []
+            state.notifications = []
         }
     },
     extraReducers: (builder)=>{
@@ -195,7 +238,9 @@ export const userSlice = createSlice({
     }
 })
 
-export const {logoutAction, changeIsNew} = userSlice.actions;
+export const {logoutAction, changeIsNew,
+     updateRequestsAction, updateNotificationsAction,
+    acceptRequestAction} = userSlice.actions;
 
 export default userSlice.reducer;
 

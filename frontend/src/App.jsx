@@ -4,17 +4,13 @@ import Home from "./components/Home"
 import Register from "./components/Register"
 import Login from "./components/Login"
 import EditPicAndStats from "./components/EditPicAndStats"
-import { useDispatch, useSelector } from "react-redux"
-// import { useEffect } from "react"
+import { useSelector } from "react-redux"
 import SocketContext from "./context"
-import { useEffect } from "react"
-import { updateMessagesAction } from "./controller/ChatReducer"
-// import { updateMessagesAction } from "./controller/ChatReducer"
 
 const socket = io(process.env.REACT_APP_BACKEND_URL.split('/api/v1')[0])
 function App() {
     // console.log(process.env.REACT_APP_BACKEND_URL)
-    const {user, error} = useSelector((state) => state.user)
+    const {user} = useSelector((state) => state.user)
     const{ token } = user
     return (
       <div className="dark">

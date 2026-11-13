@@ -21,33 +21,32 @@ export default function Notifications({setShowNotifications, setShowSearchAndCon
             {
                 notifications && notifications.map((notification)=>{
                     return(           
-                    <li className='text-white list-none h-[72px] w-full bg-dar_bg_1 hover:bg-dark_bg_2'
+                    <li className='text-white list-none h-[65px] w-full bg-dar_bg_1 border-b border-t border-t-dark_border_1 border-b-dark_border_1'
                          key={notification._id}>
-                             <div className=" border-b border-b-dark_border_1"></div>
-                            <div className="relative w-full flex items-center justify-between py-[10px]">
-                                {/* left */}
-                                <div className="flex items-center gap-x-1 px-[10px]">
-                                    <div className="w-full flex flex-col">
-                                        <h3 className=" flex items-center gap-x-2">{notification.message}</h3>
-                                    </div>                               
-                                    <button className="w-[100px] h-[50px] rounded-full flex items-center justify-center hover:bg-dark_hover_1"
-                                        onClick={()=>{}}>
-                                        <CloseIcon className='dark:fill-dark_svg_1' />
-                                    </button>
+                                <div className="relative  h-full w-full flex items-center justify-between px-[10px]">
+                                    {/* left */}
+                                    <div className="flex items-center gap-x-5 px-[10px] h-full w-full">
+                                        <div className="w-full flex flex-col">
+                                            <span className="text-sm flex items-center gap-x-2">{notification.message}</span>
+                                        </div>                               
+                                        {/* <button className="w-[100px] h-[50px] rounded-full flex items-center justify-center hover:bg-dark_hover_1"
+                                            onClick={()=>{}}>
+                                            <CloseIcon className='dark:fill-dark_svg_1' />
+                                        </button> */}
+                                        <div className="flex flex-col gap-y-4 items-end text-xs">
+                                        <span className="text-dark_text_2">{MomentDate(notification.createdAt)}</span>
+                                        </div>
+                                    </div>
+                                    {/* right */}
+                            
                                 </div>
-                                {/* right */}
-                                {/* <div className="flex flex-col gap-y-4 items-end text-xs">
-                                    <span className="text-dark_text_2">{MomentDate(notification.createdAt)}</span>
-                                </div> */}
-                            </div>
-                            <div className="border-b border-b-dark_border_1"></div>
                         </li>)
                 })
             }
 
-            { notifications 
+            { notifications && notifications.length > 0
                 ?   null 
-                : <div className='h-[82.5%] flex justify-center items-center border text-sm text-slate-400'>    
+                : <div className='h-[65%] flex justify-center items-center text-sm text-slate-400'>    
                     You don't have any notifications.
                   </div> 
             }

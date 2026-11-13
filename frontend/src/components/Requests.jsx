@@ -1,7 +1,7 @@
 // import {useEffect, useState} from 'react'
 import { ReturnIcon } from '../assets'
 import { useDispatch, useSelector } from 'react-redux'
-import { ValidIcon, CloseIcon } from '../assets'
+// import { ValidIcon, CloseIcon } from '../assets'
 
 export default function Requests({setShowRequests, setShowSearchAndConvo}) {
 
@@ -12,6 +12,7 @@ export default function Requests({setShowRequests, setShowSearchAndConvo}) {
         setShowRequests(false)
         setShowSearchAndConvo(true)
     }  
+    
 
     return (
         <section className="h-full">
@@ -22,12 +23,12 @@ export default function Requests({setShowRequests, setShowSearchAndConvo}) {
             {
                 requests && requests.map((request)=>{
                     return(           
-                    <li className='text-white list-none h-[72px] w-full bg-dar_bg_1 hover:bg-dark_bg_2'
+                    <li className='text-white list-none h-[72px] w-full bg-dar_bg_1'
                          key={request._id}>
                              <div className=" border-b border-b-dark_border_1"></div>
                             <div className="relative w-full flex items-center justify-between py-[10px]">
                                 {/* left */}
-                                <div className="flex items-center gap-x-1 px-[10px]">
+                                <div className="flex items-center gap-x-1 px-[10px] w-full">
                                     <div className="relative rounded-full overflow-hidden h-[45px] min-w-[45px] max-w-[45px]">
                                         <img src={request.from.picture} alt="" className="w-full h-full object-cover"/>
                                     </div>
@@ -41,13 +42,22 @@ export default function Requests({setShowRequests, setShowSearchAndConvo}) {
                                             </div>
                                         </div>
                                     </div>
-                                     <button className="w-[30px] h-[30px] rounded-full flex items-center justify-center hover:bg-dark_hover_1 "
+                                     <button className="w-[100px] h-[30px] rounded-md px-[10px]
+                                      flex items-center justify-center 
+                                      text-green-500 hover:text-white
+                                      hover:bg-green-800 text-sm border border-green-800"
                                         onClick={()=>{}}>
-                                        <ValidIcon className='dark:fill-dark_svg_1' />
+                                        Accept
+                                        {/* <ValidIcon className='dark:fill-dark_svg_1' /> */}
                                     </button>                                    
-                                    <button className="w-[100px] h-[50px] rounded-full flex items-center justify-center hover:bg-dark_hover_1"
+                                    <button className="w-[80px] h-[30px] rounded-md px-[10px]
+                                    text-sm flex items-center justify-center 
+                                    text-red-500 hover:text-white
+                                    hover:bg-red-800
+                                    border border-red-800"
                                         onClick={()=>{}}>
-                                        <CloseIcon className='dark:fill-dark_svg_1' />
+                                       Delete  
+                                        {/* <CloseIcon className='dark:fill-dark_svg_1' /> */}
                                     </button>
 
                                 </div>
@@ -61,9 +71,9 @@ export default function Requests({setShowRequests, setShowSearchAndConvo}) {
                 })
             }
 
-            { requests 
+            { requests && requests.length > 0
                 ?   null 
-                :   <div className='h-[82.5%] flex justify-center items-center border text-sm text-slate-400'>     
+                :   <div className='h-[65%] flex justify-center items-center text-sm text-slate-400'>     
                         You don't have any requests yet.
                     </div> 
             }

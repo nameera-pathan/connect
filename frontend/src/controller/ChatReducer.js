@@ -7,7 +7,6 @@ const initialState = {
     conversations:[],
     messages:[],
     activeConversation:{},
-    notifications:[],
     files:[]
 }
 
@@ -41,13 +40,13 @@ export const getActiveConversationThunk = createAsyncThunk('conversation/active'
 
         // Get token from userReducer
         const token = await state.user.user.token;
-        console.log("values - ", values)
+        // console.log("values - ", values)
         // API Call with token
         const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/conversation`, values,     
             {  
                 headers: {Authorization: `Bearer ${token}`},
             })
-        console.log(response.data.data)    
+        // console.log(response.data.data)    
         return response.data.data
     } catch (err) {
         console.log(err.response.data)
