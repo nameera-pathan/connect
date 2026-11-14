@@ -9,38 +9,77 @@ import { useSelector } from 'react-redux'
 export default function Call({call, setCall, 
     callAccepted, myVideo, answerCall,
     show, userVideo, stream, endCall,
-    totalSecInCall, setTotalSecInCall}) {
+    totalSecInCall, setTotalSecInCall, remoteStream}) {
 
     const {receivingCall, callEnded} = call
     const [timer, setTimer] = useState(0)
     const [showActions, setShowActions] = useState(false)
     const [toggle, setToggle] = useState(false)
     const {user} = useSelector(state => state.user)
-    let interval;
-    const handleTimer = () =>{
-        interval = setInterval(()=>{
-            setTimer(prev=>prev+1)
-        },1000)
-    }
-    useEffect(()=>{
-        if(timer<=15){
-            handleTimer()
-        }else{
-            setCall({...call, receivingCall: false })
-        }
-        return () => clearInterval(interval)
-    },[timer])
 
-    useEffect(()=>{
-        const setSecInCall = () => {
-            setTotalSecInCall(prev=>prev+1)
-            setTimeout(setSecInCall, 1000)
+    const {activeConversation} = useSelector(state => state.chat)
+    // console.log(activeConversation, user)    
+
+    useEffect(() => {
+        if (userVideo.current && remoteStream) {
+            userVideo.current.srcObject = remoteStream;
         }
-        if(callAccepted){
-            setSecInCall()
+    }, [remoteStream, callAccepted]);
+
+
+    useEffect(() => {
+        if (myVideo.current && stream && show && !callEnded) {
+            myVideo.current.srcObject = stream;
+
+            myVideo.current.play().catch(err => {
+                console.log("Local video play error:", err);
+            });
         }
-        return () => setTotalSecInCall(0)
-    },[callAccepted])
+    }, [stream, show, callEnded]);
+
+    useEffect(() => {
+        if (!receivingCall || callAccepted) {
+            setTimer(0);
+            return;
+        }
+
+        // Reset timer for every new incoming call
+        setTimer(0);
+
+        const interval = setInterval(() => {
+            setTimer(prev => {
+                if (prev >= 15) {
+                    setCall(current => ({
+                        ...current,
+                        receivingCall: false
+                    }));
+
+                    clearInterval(interval);
+                    return prev;
+                }
+
+                return prev + 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(interval);
+
+    }, [receivingCall, callAccepted, setCall]);
+
+    useEffect(() => {
+        if (!callAccepted) {
+            setTotalSecInCall(0);
+            return;
+        }
+
+        const interval = setInterval(() => {
+            setTotalSecInCall(prev => prev + 1);
+        }, 1000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [callAccepted, setTotalSecInCall]);
 
     return (
         <>
@@ -56,23 +95,37 @@ export default function Call({call, setCall,
                 {/* header */}
                 <header className='absolute top-0 w-full z-40'>
                     {/* header container */}
+                    { totalSecInCall > 0 ? <>
                     <div className="p-1 flex items-center justify-between">
-                        {/* return button */}
-                        <button className='btn'>
-                            <span className='rotate-180 scale-150'>
-                                <ArrowIcon className='fill-white'/>
-                            </span>
-                        </button>
-                        {/* end to end encrypted text */}
-                        <p className="flex items-center">
-                            <LockIcon className='fill-white scale-75'/> 
-                            <span className="text-xs text-white">end to end encrypted</span>
-                        </p>
-                        {/* add contact to call */}
-                        <button className='btn'>
-                            <AddContactIcon className='fill-white'/>
-                        </button>
-                    </div>
+                        <div className="flex items-center px-[10px] bg-slate-500 rounded-md text-white">
+                                {/* call times */}
+                                <div className={`${totalSecInCall > 0 ? 'block' : 'hidden'}`}>
+                                    {Math.floor(totalSecInCall / 3600) > 0 && (
+                                        <>
+                                            <span>
+                                                {String(Math.floor(totalSecInCall / 3600)).padStart(2, '0')}
+                                            </span>
+                                            <span> : </span>
+                                        </>
+                                    )}
+                                    <span>
+                                        {String(Math.floor((totalSecInCall % 3600) / 60)).padStart(2, '0')}
+                                    </span>
+                                    <span> : </span>
+                                    <span>
+                                        {String(totalSecInCall % 60).padStart(2, '0')}
+                                    </span>
+                                </div>
+                        </div>
+                        <div  className="flex items-center px-[10px] bg-slate-500 rounded-md text-white">
+                            { 
+                                (Object.keys(activeConversation).length !== 0) ?
+                                    activeConversation.members[0]._id === user.id ? `@${activeConversation.members[1].username}` : `@${activeConversation.members[0].username}`
+                                : null    
+                            }
+                        </div>
+                    </div> 
+                    </> : null}
                 </header>
 
                 {/* call area */}
@@ -80,41 +133,14 @@ export default function Call({call, setCall,
                     <div className="flex flex-col items-center">
                         {/* call infos */}
                         <div className="flex items-center flex-col gap-y-1">
-                            <h1 className='text-white text-lg'>
-                                <b>{user.name ? capitalize(user.name) : null}</b>
-                            </h1>
                            { totalSecInCall === 0 
-                           ? <span className="text-dark_text_1">Ringing...</span>
+                           ? (<>
+                                <h1 className='text-white text-lg'>
+                                    <b>{user.name ? capitalize(user.name) : null}</b>
+                                </h1>
+                                <span className="text-dark_text_1">Ringing...</span>
+                            </>)
                            : null } 
-
-                            {/* call times  */}
-                            <div className={`text-dark_text_2 ${totalSecInCall !== 0 ? 'block': 'hidden'}`}>
-                                {parseInt(totalSecInCall/3600 >= 0) 
-                                    ? (<>
-                                        <span>{parseInt(totalSecInCall/3600).toString.length<2 
-                                            ? '0' + parseInt(totalSecInCall/3600)  
-                                            : parseInt(totalSecInCall/3600)  
-                                        }</span>
-                                        <span>:</span>
-                                        </>)
-                                    : null
-                                }
-
-                                <span>
-                                    {parseInt(totalSecInCall/60).toString.length<2
-                                    ? '0' + parseInt(totalSecInCall/60)
-                                    :   parseInt(totalSecInCall/60)
-                                    }
-                                </span>    
-                                <span>:</span>
-                                <span>
-                                    {(totalSecInCall%60).toString.length<2
-                                    ? '0' + (totalSecInCall%60)
-                                    :   (totalSecInCall%60)
-                                    }
-                                </span>    
-
-                            </div>
 
                         </div>
                     </div>
@@ -156,37 +182,46 @@ export default function Call({call, setCall,
                     </div>
                 ) : null}
             </div>
-            
+
+
             {/* video streams */}
             <div>
-                {/* userVideo */}
-                { callAccepted && !callEnded 
-                ?  (<div>
-                        <video ref={userVideo} playsInline muted autoPlay 
-                            className={ toggle 
-                            ? 'absolute top-0 bottom-0 left-0 right-0 z-20 object-cover h-full bg-red-400 cursor-pointer'
-                            : 'w-28 h-32 object-cover absolute bottom-4 right-2 z-30 bg-blue-500 cursor-pointer rounded-lg'}
-                            onClick={()=>setToggle(prev=>!prev)}  >
-                        </video>
-                   </div>) 
-                : null }
-                {/* myVideo */}
+                {/* remote video (other person) */}
+                {callAccepted && !callEnded ? (
+                    <video
+                        ref={userVideo}
+                        playsInline
+                        autoPlay
+                        className={
+                            toggle
+                                ? 'absolute top-0 bottom-0 left-0 right-0 z-20 object-cover h-full cursor-pointer'
+                                : 'w-28 h-32 object-cover absolute bottom-4 right-2 z-30 rounded-lg'
+                        }
+                        onClick={() => setToggle(prev => !prev)}
+                    />) : null
+                }
 
-                { stream 
-                ? ( <div>
-                        <video ref={myVideo} playsInline muted autoPlay 
-                           className={` 
-                                ${toggle 
-                                ? 'w-28 h-32 object-cover absolute bottom-4 right-2 z-30 bg-blue-500 cursor-pointer rounded-lg' 
-                                :'absolute top-0 bottom-0 left-0 right-0 z-20 object-cover h-full bg-red-400 cursor-pointer'
-                                } 
-                            ${ showActions ? 'moveVideoCall' : '' } `}
-                            onClick={()=>setToggle(prev=>!prev)}  >
-                        </video>
-                    </div>) 
-                : null }
-               
-            </div>     
+                {/* myVideo (your own video) */}
+                {/* {console.log(stream)} */}
+                {stream && (
+                    <div>
+                        <video
+                            ref={myVideo}
+                            playsInline
+                            muted
+                            autoPlay
+                            className={`
+                                ${toggle
+                                    ? 'w-28 h-32 object-cover absolute bottom-4 right-2 z-30 bg-blue-500 cursor-pointer rounded-lg'
+                                    : 'absolute top-0 bottom-0 left-0 right-0 z-20 object-cover h-full bg-red-400 cursor-pointer'
+                                }
+                                ${showActions ? 'moveVideoCall' : ''}
+                            `}
+                            onClick={() => setToggle(prev => !prev)}
+                        />
+                    </div>
+                )}
+            </div>
 
         </div>
         </section>
@@ -229,14 +264,13 @@ export default function Call({call, setCall,
             !callAccepted && show 
                 ? ( <audio src='../../../audio/ringing.mp3' autoPlay loop></audio> ) 
                 : null
-            }
-
-     
-        
-    </>
-        
-    )
+            }   
+    </> )
 }
+
+
+
+
 
 
 

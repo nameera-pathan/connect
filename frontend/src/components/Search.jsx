@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import { FilterIcon, ReturnIcon, SearchIcon } from '../assets'
-import { useRef } from 'react'
 import axios from 'axios'
 import { useSelector } from 'react-redux'
 
