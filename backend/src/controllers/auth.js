@@ -8,6 +8,7 @@ const {validateRegistrationData, validateLogin} = require('../utils/helpers')
 const register = async (req, res) => {
     try {
         // console.log(req.body)
+        console
         validateRegistrationData(req.body)
         const {name, email, password, username} = req.body
         const user = new User({ 
@@ -69,9 +70,9 @@ const login = async (req, res) => {
         if(email){ user = await User.findOne({email}) }
         if(username){ user = await User.findOne({username})  }
         if(!user) throw new Error('User not found!')
-        console.log('user ----------------->',user)    
+        // console.log('user ----------------->',user)    
         const isPasswordValid = await bcrypt.compare(password, user.password.toString())
-        console.log("valid ----> ", isPasswordValid)
+        // console.log("valid ----> ", isPasswordValid)
         if(!isPasswordValid) throw new Error('Invalid credentials!')
 
         // access_token
@@ -155,7 +156,7 @@ const search = async (req, res) =>{
         } 
         else if(keyword){
             message = 'keyword'
-            console.log('keyword')
+            // console.log('keyword')
             users = await User.find({
                 $or:[
                     {name:{$regex:keyword, $options:'i'}},

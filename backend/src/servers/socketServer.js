@@ -1,23 +1,41 @@
+// socket is a client
+// joining a client in a room by join() method
+
+// when user log in or open the application
+// every socket has a socket id and it will change if user disconnects and refresh or revisit the app
+
 let onlineUsers = []
 
 const SocketServer = (socket, io) =>{
-    // socket is a client
-    // joining a client in a room by join() method
+    // OLD ---------------------
+    // socket.on('join', (userId)=>{
+    //     socket.join(userId)
+    //     let onlineUserExist = onlineUsers.some((u)=>u.userId === userId )
+    //     if(!onlineUserExist){
+    //         // console.log(`USER-ID =>   ${userId}   lOGGED IN!!!!!`);
+    //         onlineUsers.push({
+    //             userId,
+    //             socketId:socket.id
+    //         })
+    //     }
+    //     io.emit('online-users', onlineUsers)
+    //     // send socket id 
+    //     io.emit('setup socket', socket.id)
+    // })
 
-    // when user log in or open the application
-    // every socket has a socket id and it will change if user disconnects and refresh or revisit the app
-    socket.on('join', (userId)=>{
-        socket.join(userId)
-        let onlineUserExist = onlineUsers.some((u)=>u.userId === userId )
-        if(!onlineUserExist){
-            // console.log(`USER-ID =>   ${userId}   lOGGED IN!!!!!`);
-            onlineUsers.push({
-                userId,
-                socketId:socket.id
-            })
-        }
-        io.emit('online-users', onlineUsers)
-    })
+    // FIXED --------------------
+        socket.on('join', (userId) => {
+        onlineUsers = onlineUsers.filter(
+            (user) => user.userId.toString() !== userId.toString()
+        );
+        socket.join(userId);
+        onlineUsers.push({
+            userId,
+            socketId: socket.id
+        });
+        io.emit('online-users', onlineUsers);
+        io.emit('setup socket', socket.id);
+    });
 
     // when user log out or close the application
     // every time user disconnect and reconnects the socket id will also change
@@ -65,6 +83,36 @@ const SocketServer = (socket, io) =>{
         }) 
         // console.log(conversation.members)
     })
+
+    // CALL USER
+    socket.on('call user', (data) => {
+        const recipient = onlineUsers.find(
+            (user) => user.userId.toString() === data.userToCall.toString()
+        );
+
+        if (!recipient) {
+            socket.emit('user offline', data.userToCall);
+            return;
+        }
+
+        io.to(recipient.socketId).emit('call user', {
+            signal: data.signal,
+            from: socket.id,
+            name: data.name,
+            picture: data.picture
+        });
+    });
+
+    // ANSWER CALL
+    socket.on('answer call', (data) => {
+        io.to(data.to).emit('call accepted', data.signal);
+    });
+
+    // END CALL
+    socket.on('call ended', (socketId) => {
+        io.to(socketId).emit('call ended');
+    });
+
 }
 
 module.exports = SocketServer

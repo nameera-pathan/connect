@@ -109,8 +109,8 @@ const acceptAndRejectRequests = async (req, res) => {
             await notify.save()
             res.send({
                 message: `you and ${connectedUser.username} are now friends.`,
-                you:loggedInUserFriends,
-                other: connectedUserFriends,
+                // you:loggedInUserFriends,
+                // other: connectedUserFriends,
                 data,
             })
         }
