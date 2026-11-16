@@ -1,14 +1,23 @@
 import React from 'react'
 import { logoutAction, logoutUserThunk } from "../controller/UserReducer"
+import { resetChat } from '../controller/ChatReducer'
 import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from 'react-router-dom'
-export default function SidebarMenu({ setShowCreateGroup }) {
+export default function SidebarMenu({ setShowCreateGroup, showProfile, setShowProfile }) {
+    
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
     const handleLogout = () => {
         dispatch(logoutUserThunk())
         dispatch(logoutAction())
     }
+
+    const handleProfile = () =>{
+        dispatch(resetChat())
+        setShowProfile(true)
+    }
+
     return (
         <section className='absolute right-1 z-50 bg-dark_bg_2 text-dark_text_1 shadow-md w-52 rounded-sm'>
             <ul>
@@ -17,7 +26,7 @@ export default function SidebarMenu({ setShowCreateGroup }) {
                 >
                     <span>New group</span>
                 </li>
-                <li className='py-3 pl-5 cursor-pointer hover:bg-dark_bg_3' onClick={()=>{navigate('/edit')}}>
+                <li className='py-3 pl-5 cursor-pointer hover:bg-dark_bg_3' onClick={handleProfile}>
                     <span>Profile</span>
                 </li>
                 <li className='py-3 pl-5 cursor-pointer hover:bg-dark_bg_3' onClick={handleLogout}>

@@ -41,7 +41,7 @@ export default function Search({searchLength, setSearchResults, inputRef, show, 
                           type='text'
                           placeholder='Search or start a new chat'
                           ref={inputRef}
-                          className='w-full dark:bg-dark_bg_2 p-1.5 dark:text- rounded-lg flex-1 outline-none'
+                          className='w-full dark:bg-dark_bg_2 p-1.5 rounded-lg flex-1 outline-none'
                           onFocus={()=>{setShow(true)}}
                           onBlur={()=> searchLength == 0 && setShow(false) }
                           onKeyDown={(e)=>{handleSearch(e)}}

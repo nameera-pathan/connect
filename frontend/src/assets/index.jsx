@@ -32,8 +32,10 @@ import SpeakerIcon from "./Speaker";
 import VideoDialIcon from "./VideoDial";
 import DialIcon from "./Dial";
 import VideoCallIcon from "./VideoCall";
+import EditIcon from "./EditIcon";
 
 export {
+  EditIcon,
   CommunityIcon,
   StoryIcon,
   ChatIcon,

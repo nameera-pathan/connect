@@ -34,7 +34,7 @@ export default function Notifications({setShowNotifications, setShowSearchAndCon
                                             <CloseIcon className='dark:fill-dark_svg_1' />
                                         </button> */}
                                         <div className="flex flex-col gap-y-4 items-end text-xs">
-                                        <span className="text-dark_text_2">{MomentDate(notification.createdAt)}</span>
+                                            <span className="text-dark_text_2 w-[70px]">{MomentDate(notification.createdAt)}</span>
                                         </div>
                                     </div>
                                     {/* right */}

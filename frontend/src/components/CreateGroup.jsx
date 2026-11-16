@@ -7,7 +7,7 @@ import { ClipLoader } from 'react-spinners'
 import { createGroupConversationThunk } from '../controller/ChatReducer'
 // import { useNavigate } from 'react-router-dom'
 
-export default function CreateGroup({ setShowCreateGroup }) {
+export default function CreateGroup({ setShowCreateGroup, setShowRequests, setShowNotifications, setShowSearchAndConvo }) {
 
     const dispatch = useDispatch()
     // const navigate = useNavigate()
@@ -70,13 +70,20 @@ export default function CreateGroup({ setShowCreateGroup }) {
         }
     }
 
+    const returnToHome = () =>{
+        setShowRequests(false)
+        setShowNotifications(false)
+        setShowCreateGroup(false)
+        setShowSearchAndConvo(true)
+    }
+
     return (
         <section className='createGroupAnimation relative flex0030 h-full z-40'>
             <div className='mt-5'>
 
                 {/* return close button */}
                 <div className='cursor-pointer w-6 h-6 border rounded-full'
-                onClick={()=>setShowCreateGroup(false)}>
+                onClick={returnToHome}>
                     <ReturnIcon className='fill-white' />
                 </div>
 

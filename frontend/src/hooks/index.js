@@ -19,6 +19,7 @@ export const useValidateName = (data) => {
 
 export const MomentDate = (date) => {
     let now = moment()
+    // console.log(date)
     let momentDate = moment(date)
     let time = momentDate.fromNow(true)
     let dateByHourAndMin = momentDate.format('hh:mm a')

@@ -6,13 +6,12 @@ import { getConversationThunk, updateMessagesAction } from "../controller/ChatRe
 import { getRequestsThunk, getNotificationsThunk, updateRequestsAction, updateNotificationsAction } from "../controller/UserReducer"
 import DisplayNone from "./DisplayNone"
 import DisplayMessages from "./DisplayMessages"
+import Display from "./Display"
 import SocketContext from "../context"
 import Call from "./Call"
 // import { use } from "react"
 import { getConversationName, getConversationPicture, getConversationId } from "../hooks"
 import Peer from 'simple-peer'
-
-
 
 const Home = () => {
     const socket = useContext(SocketContext)
@@ -22,6 +21,7 @@ const Home = () => {
     const [usersOnline, setUsersOnline] = useState([])
     const [isTyping, setIsTyping] = useState(false)
     const [show, setShow] = useState(false)
+    const [showProfile, setShowProfile] = useState(false)
     const [call, setCall] = useState({
       socketId:'',
       receivingCall: false,
@@ -290,15 +290,15 @@ const Home = () => {
     };
 
     return (
-        <section className="h-screen flex justify-center items-center bg-dark_bg_1 border overflow-hidden border py-4">
+        <section className="h-screen flex justify-center items-center bg-dark_bg_1 overflow-hidden py-4">
           <div className="container flex border w-full h-full">
-
-            <SideBar onlineUsers={usersOnline} isTyping={isTyping} />
-            {activeConversation._id 
-            //  && activeConversation.members[1]._id === user.id
-            ? <DisplayMessages onlineUsers={usersOnline} isTyping={isTyping} 
-            callUser={callUser} setCall={setCall} call={call}/> 
-            : <DisplayNone/> }
+                <SideBar onlineUsers={usersOnline} isTyping={isTyping}
+                showProfile={showProfile} setShowProfile={setShowProfile} />
+                {activeConversation._id 
+                //  && activeConversation.members[1]._id === user.id
+                ? <DisplayMessages onlineUsers={usersOnline} isTyping={isTyping} 
+                            callUser={callUser} setCall={setCall} call={call}/> 
+                : <Display showProfile={showProfile} setShowProfile={setShowProfile} /> }
           </div>  
 
           <div className={(show || call.signal) && !call.callEnded ? '' : 'hidden' }>

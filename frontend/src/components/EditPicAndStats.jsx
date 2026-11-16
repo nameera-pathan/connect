@@ -125,16 +125,16 @@ const EditPicAndStats = () => {
 
                 {/* for user status */}
                 <div className="mb-4 w-full">
-                <input
-                    autoComplete="off"
-                    name='status'
-                    type="text"
-                    placeholder="Your status"
-                    className="input input-bordered w-full"
-                    required
-                    value={currentStatus}
-                    onChange={(e)=>{setCurrentStatus(e.target.value)}}
-                />
+                    <input
+                        autoComplete="off"
+                        name='status'
+                        type="text"
+                        placeholder="Your status"
+                        className="input input-bordered w-full"
+                        required
+                        value={currentStatus}
+                        onChange={(e)=>{setCurrentStatus(e.target.value)}}
+                    />
                 </div>
             
 

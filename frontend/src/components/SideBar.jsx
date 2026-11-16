@@ -18,7 +18,7 @@ import CreateGroup from "./CreateGroup"
 import Requests from "./Requests"
 import { getRequestsThunk, getNotificationsThunk } from '../controller/UserReducer'
 
-export default function SideBar({onlineUsers, isTyping}) {
+export default function SideBar({onlineUsers, isTyping, showProfile, setShowProfile}) {
     const {user, requests, notifications} = useSelector((state)=>state.user)
     const [searchResults, setSearchResults] = useState([])
     const [showDotsMenu, setShowDotsMenu] = useState(false)
@@ -38,12 +38,14 @@ export default function SideBar({onlineUsers, isTyping}) {
         setShowRequests(true)
         setShowNotifications(false)
         setShowSearchAndConvo(false)
+        setShowCreateGroup(false)
         dispatch(getRequestsThunk())
     }
     const handleShowNotifications = () =>{
         setShowNotifications(true)
         setShowRequests(false)
         setShowSearchAndConvo(false)
+        setShowCreateGroup(false)
         dispatch(getNotificationsThunk())
     }
 
@@ -95,7 +97,13 @@ export default function SideBar({onlineUsers, isTyping}) {
                                 <button className={`w-[40px] h-[40px] rounded-full flex items-center justify-center ${showDotsMenu? 'bg-dark_hover_1' : 'bg-dark_bg_2'} hover:bg-dark_hover_1`}>
                                     <DotsIcon className='dark:fill-dark_svg_1' />
                                 </button>
-                                {showDotsMenu ? <SidebarMenu setShowCreateGroup={setShowCreateGroup}/> : null}
+                                {
+                                    showDotsMenu 
+                                        ? <SidebarMenu setShowCreateGroup={setShowCreateGroup} 
+                                                        showProfile={showProfile}
+                                                        setShowProfile={setShowProfile} /> 
+                                        : null    
+                                }
                                 </li>
                             </ul>
                         </div>
@@ -114,13 +122,16 @@ export default function SideBar({onlineUsers, isTyping}) {
                     <div className="border-b"></div>
 
                 {/* CREATE GROUP  */}
-                { showCreateGroup && <CreateGroup setShowCreateGroup={setShowCreateGroup} /> }
+                { showCreateGroup && <CreateGroup setShowCreateGroup={setShowCreateGroup} 
+                setShowRequests={setShowRequests}
+                setShowNotifications={setShowNotifications} 
+                setShowSearchAndConvo={setShowSearchAndConvo}  /> }
 
                 {/* Notifications */}
-                { showNotifications && (<Notifications setShowNotifications={setShowNotifications} setShowSearchAndConvo={setShowSearchAndConvo}/>)}
+                { showNotifications && (<Notifications setShowNotifications={setShowNotifications} setShowSearchAndConvo={setShowSearchAndConvo} />)}
 
                 {/* Requests */}
-                { showRequests && (<Requests setShowRequests={setShowRequests} setShowSearchAndConvo={setShowSearchAndConvo} /> ) }
+                { showRequests && (<Requests setShowRequests={setShowRequests} setShowSearchAndConvo={setShowSearchAndConvo} />)}
 
                 {/* Search and Conversations */}
                 { showSearchAndConvo  &&  
