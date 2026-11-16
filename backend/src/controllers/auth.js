@@ -8,7 +8,7 @@ const {validateRegistrationData, validateLogin} = require('../utils/helpers')
 const register = async (req, res) => {
     try {
         // console.log(req.body)
-        console
+        // console
         validateRegistrationData(req.body)
         const {name, email, password, username} = req.body
         const user = new User({ 
@@ -39,14 +39,13 @@ const register = async (req, res) => {
                 status: data.status,
                 token: access_token,
                 phonenumber: data.phonenumber,
-                password: data.password,
                 username: data.username,
                 friends: data.friends,
                 followers: data.followers,
                 following: data.following,
                 requests:data.requests,
                 notifications:data.notifications,
-                tag: data.tag,
+                socials: data.socials,
                 bio: data.bio,
                 isNew: isNew
             }
@@ -55,7 +54,7 @@ const register = async (req, res) => {
         if (err.errorResponse && err.errorResponse.keyPattern.email === 1){
             res.status(403).send('Email already exist!')
         }else if(err.errorResponse && err.errorResponse.keyPattern.username === 1){
-            res.status(403).send('username already exist... use different tagname or tag!')
+            res.status(403).send('username already exist!')
         }
         else res.status(400).send(err.message) 
     }
@@ -96,12 +95,9 @@ const login = async (req, res) => {
                 phonenumber: user.phonenumber,
                 username:user.username,
                 friends:user.friends,
-                password:user.password,
                 followers: user.followers,
                 following: user.following,
-                requests: user.requests,
-                notifications: user.notifications,
-                tags: user.tags,
+                socials: user.socials,
                 bio: user.bio,
             }
         })
@@ -112,25 +108,58 @@ const login = async (req, res) => {
 
 const editInfo = async (req, res) => {
     try {
-        const {picture, status} = req.body
         const user = await User.findOne({_id:req.user.id})
+        const {picture, status, bio, name, username, email, socials } = req.body
         if(picture !== '') user.picture = picture
         if(status !== '') user.status = status
-        await user.save()
+        if(user.name !== name) user.name = name
+        if(user.bio !== bio) user.bio = bio
+        if(user.username !== username) {
+            usernameExist = await User.findOne({username})
+            if(usernameExist) return res.status(400).send(`the username ${username} is not available.`) 
+            user.username = username 
+        }
+        if(user.email !== email) {
+            emailExist = await User.findOne({email})
+            if(emailExist) return res.status(400).send("this email is already registered.") 
+            user.email = email
+        }
+        if(socials){
+            user.socials = []
+            for(const key in socials){
+                user.socials.push({[key]: socials[key]})
+            }
+        }
+        const usr = await user.save()
         res.send({
             message: 'Info updated successfully',
             data: {
-                id:user._id,
-                name: user.name,
-                email: user.email,
-                picture: user.picture,
-                status: user.status,
-                phonenumber: user.phonenumber,
-                username:user.username,
+                id:usr._id,
+                name: usr.name,
+                email: usr.email,
+                picture: usr.picture,
+                status: usr.status,
+                phonenumber: usr.phonenumber,
+                username:usr.username,
+                friends:usr.friends,
+                followers: usr.followers,
+                following: usr.following,
+                socials: user.socials,
+                bio: user.bio,
             }
         })
     } catch (err) {
         res.status(400).send(err.message) 
+    }
+}
+
+const changePassword = async (req, res) => {
+    try {
+        const {password} = req.body
+        const id = req.user.id
+        const user = await User.findById(id)
+    } catch (err) {
+        res.status(400).send(err.message)
     }
 }
 
@@ -207,6 +236,7 @@ const refreshToken = async (req, res) => {
                 token: access_token,
                 phonenumber: user.phonenumber,
                 username:user.username,
+                socials:user.socials,
                 friends:user.friends,
                 followers:user.followers,
                 following:user.following,
@@ -219,7 +249,7 @@ const refreshToken = async (req, res) => {
     }
 }
 
-module.exports = {register, login, logout, refreshToken, editInfo, search}
+module.exports = {register, login, logout, refreshToken, editInfo, search, changePassword}
 
 
 

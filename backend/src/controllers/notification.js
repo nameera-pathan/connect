@@ -6,7 +6,6 @@ const viewAllNotifications = async (req, res) =>{
     try{
         const user = req.user.id
         const notifications = await Notification.find({to:user})
-        .sort({'createdAt': -1}).select('to seen message')
         if(notifications.length > 0) res.send({
             message: "notifications fetched successfully!", 
             data: notifications

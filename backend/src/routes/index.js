@@ -1,6 +1,6 @@
 const express = require('express')
 const trimRequest = require('trim-request')
-const {register, login, logout, refreshToken, editInfo, search} = require('../controllers/auth')
+const {register, login, logout, refreshToken, editInfo, search, changePassword} = require('../controllers/auth')
 const { openAndCreateCoversation,  getConversations, createGroupConversation } = require('../controllers/conversation')
 const { userAuth } = require('../middlewares/userAuth')
 const { sendMessage, getConversationMessages } = require('../controllers/message')
@@ -18,6 +18,7 @@ Router.post('/refreshtoken', trimRequest.all, refreshToken)
 Router.get('/middleware', trimRequest.all, userAuth )
 
 Router.patch('/edit', trimRequest.all, userAuth, editInfo)
+Router.patch('/password', trimRequest.all, userAuth, changePassword)
 Router.get('/search', trimRequest.all, userAuth, search)
 
 Router.post('/conversation', trimRequest.all, userAuth, openAndCreateCoversation)
